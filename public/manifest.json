@@ -1,0 +1,12 @@
+{
+  "name": "FIST Extension",
+  "version": "1.0.0",
+  "manifest_version": 1,
+  "action": {
+    "title": "FIST Extension",
+    "icon": "/icon.svg",
+    "popover": "/",
+    "height": 594,
+    "width": 440
+  }
+}
