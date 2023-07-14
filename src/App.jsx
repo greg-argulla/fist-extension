@@ -719,7 +719,7 @@ function App() {
           className="input-stat"
           type="number"
           style={{
-            width: 180,
+            width: 140,
             color: "lightred",
           }}
           value={MOD}
@@ -729,11 +729,22 @@ function App() {
           className="button-dice"
           style={{
             width: 130,
-            marginRight: 0,
+            marginRight: 4,
           }}
           onClick={() => {}}
         >
           Role / Traits /Inventory
+        </button>
+        <button
+          className="button-dice"
+          style={{
+            width: 35,
+            color: "red",
+            marginRight: 0,
+          }}
+          onClick={() => {}}
+        >
+          Close
         </button>
       </div>
     );
@@ -801,7 +812,7 @@ function App() {
           onChange={changeRFX}
         />
         <button className="button-dice" onClick={() => {}}>
-          Reflex
+          Reflexive
         </button>
         <span className="dice-result" style={{ marginRight: 4 }}>
           Mod:
@@ -916,19 +927,85 @@ function App() {
     );
   };
 
-  return (
+  const trait = (data, index) => {
+    return (
+      <div key={index}>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Text>Name: </Text>
+          <input
+            className="input-stat"
+            style={{
+              width: 120,
+              color: "lightgrey",
+            }}
+            value={data.name}
+            placeholder="Skill/Spell/Arcana/Etc."
+            onChange={(evt) => {}}
+          />
+          <Text>Info: </Text>
+          <input
+            className="input-stat"
+            style={{
+              width: 240,
+              color: "lightgrey",
+            }}
+            value={data.info}
+            placeholder="Level/Target/MP Cost/Duration/Damage/Other"
+            onChange={(evt) => {}}
+          />
+          <button
+            className="button"
+            style={{ marginRight: 4 }}
+            onClick={() => {}}
+          >
+            Show
+          </button>
+          <button
+            className="button"
+            style={{ width: 25, color: "darkred" }}
+            onClick={() => {}}
+          >
+            ✖
+          </button>
+        </div>
+        <textarea
+          className="input-stat"
+          rows="40"
+          cols="88"
+          style={{
+            textAlign: "left",
+            color: "#FFF",
+            height: 50,
+            marginLeft: 0,
+            marginTop: 4,
+            width: 485,
+            padding: 4,
+          }}
+          placeholder="Add Description Here"
+          onChange={(evt) => {}}
+          value={data.detail}
+        ></textarea>
+      </div>
+    );
+  };
+
+  const renderDetails = () => {
     <div
       style={{
-        background: "#444",
-        backgroundSize: "contain",
-        height: 540,
-        width: 400,
-        overflow: "hidden",
+        marginLeft: 15,
+        marginRight: 15,
+        marginTop: 10,
+        height: "100%",
       }}
     >
-      {renderInfo()}
-      {renderStats()}
-      {renderDice()}
+      {trait({ name: "name", info: "info", detail: "detail" })}
+      {trait({ name: "name", info: "info", detail: "detail" })}
+      {trait({ name: "name", info: "info", detail: "detail" })}
+    </div>;
+  };
+
+  const renderChat = () => {
+    return (
       <div
         style={{
           marginLeft: 15,
@@ -990,6 +1067,24 @@ function App() {
           </button>
         </div>
       </div>
+    );
+  };
+
+  return (
+    <div
+      style={{
+        background: "#444",
+        backgroundSize: "contain",
+        height: 540,
+        width: 400,
+        overflow: "hidden",
+      }}
+    >
+      {renderInfo()}
+      {renderStats()}
+      {renderDice()}
+      {/* {renderChat()} */}
+      {renderDetails()}
     </div>
   );
 }
