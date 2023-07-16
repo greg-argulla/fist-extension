@@ -17,7 +17,7 @@ const AGENT = () => {
     id: Date.now(),
     details: {
       codename: "",
-      role: 11,
+      role: 0,
     },
     attributes: {
       FRC: 0,
@@ -50,7 +50,6 @@ function App() {
   const [diceCount, setDiceCount] = useState(1);
   const [text, setText] = useState("");
   const [isOBRReady, setIsOBRReady] = useState(false);
-  const [cooldown, setCoolDown] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
   const [selectedTrait, setSelectedTrait] = useState(111);
   const [name, setName] = useState("");
@@ -140,82 +139,92 @@ function App() {
     }
   }
 
+  function nextBiggest(arr) {
+    let max = -Infinity,
+      result = -Infinity;
+
+    for (const value of arr) {
+      const nr = Number(value);
+
+      if (nr > max) {
+        [result, max] = [max, nr]; // save previous max
+      } else if (nr < max && nr > result) {
+        result = nr; // new second biggest
+      }
+    }
+
+    return result;
+  }
+
   const rollInstance = (item, index) => {
+    let total = item.results.reduce((total, num) => {
+      return total + num;
+    });
+    if (item.bonus) total += item.bonus;
     return (
       <div className="roll-detail" style={{ textAlign: "center" }}>
-        * {item.characterName ? `${item.characterName}` : item.user} Rolled{" "}
-        <span style={{ color: "#FFF" }}>{item.result}</span>
-        {item.diceOneResult} {item.diceLabelOne}
-        {item.diceTwoResult !== 0 ? (
-          <>{` + ${item.diceTwoResult} ${item.diceLabelTwo}`}</>
-        ) : (
-          ""
-        )}
-        {!isNaN(parseInt(item.bonus)) && parseInt(item.bonus) !== 0
-          ? (parseInt(item.bonus) > -1 ? " + " : " - ") + Math.abs(item.bonus)
-          : ""}
-        {(item.diceTwoResult !== 0 ||
-          (!isNaN(parseInt(item.bonus)) && parseInt(item.bonus) !== 0)) &&
-          ` = `}
-        {item.diceTwoResult === 0 &&
-          !isNaN(parseInt(item.bonus)) &&
-          parseInt(item.bonus) !== 0 && (
-            <span
-              style={{
-                marginRight: 2,
-                marginLeft: 2,
-                fontSize: 11,
-              }}
-            >
-              {item.diceOneResult + item.bonus}
+        {item.codename} rolled{item.stat ? " " + item.stat : ""}:
+        {item.results.map((item, index) => {
+          if (index === 0) {
+            return <span style={{ color: "#438D80" }}>{" " + item}</span>;
+          }
+          return (
+            <span style={{ marginLeft: 3 }}>
+              + <span style={{ color: "#438D80" }}>{item}</span>
             </span>
-          )}
-        {item.diceTwoResult !== 0 && (
-          <span
-            style={{
-              color:
-                (item.diceOneResult + item.diceTwoResult + item.bonus) % 2 === 0
-                  ? "lightgreen"
-                  : "lightblue",
-              marginRight: 2,
-              marginLeft: 2,
-              fontSize: 11,
-            }}
-          >
-            {item.diceOneResult + item.diceTwoResult + item.bonus}
-          </span>
-        )}
-        {parseInt(item.damage) > 0
-          ? (item.useHR ? ` HR: ${HR} ` : " ") + "DMG:"
-          : ""}
-        {parseInt(item.damage) > 0 ? (
-          <span
-            style={{
-              color: "red",
-              marginRight: 2,
-              marginLeft: 2,
-              fontSize: 11,
-            }}
-          >
-            {item.useHR ? HR + item.damage : item.damage}
+          );
+        })}
+        {item.bonus ? (
+          <span style={{ marginLeft: 3 }}>
+            +{" "}
+            <span style={{ color: item.bonus > 0 ? "lightgreen" : "red" }}>
+              {item.bonus}
+            </span>
           </span>
         ) : (
           ""
         )}
-        {item.diceOneResult === item.diceTwoResult &&
-          item.diceOneResult > 5 && (
-            <>
+        {item.results.length > 1 && (
+          <span style={{ marginLeft: 3 }}>
+            = <span style={{ color: "lightblue" }}>{total}</span>
+          </span>
+        )}
+        {item.stat ? (
+          <span>
+            {item.results[0] === 6 && item.results[1] === 6 ? (
               <span
-                style={{ color: "#FF4500" }}
+                style={{ color: "#FF4500", marginLeft: 3 }}
                 className={index > chat.length - 8 ? "crit" : ""}
               >
-                CRITICAL
+                ULTRA SUCCESS
               </span>
-            </>
-          )}
-        {item.diceOneResult === item.diceTwoResult &&
-          item.diceOneResult < 6 &&
-          item.diceOneResult > 1 && <span style={{ color: "orange" }}>*</span>}
+            ) : total > 9 ? (
+              <span style={{ color: "lightgreen", marginLeft: 3 }}>
+                SUCCESS
+              </span>
+            ) : total > 6 ? (
+              <span style={{ color: "orange", marginLeft: 3 }}>
+                PARTIAL SUCCESS
+              </span>
+            ) : (
+              <span style={{ color: "brown", marginLeft: 3 }}>FAILURE</span>
+            )}
+          </span>
+        ) : (
+          ""
+        )}
+        {item.results.length === 3 && (
+          <span style={{ marginLeft: 3 }}>
+            Best Two:{" "}
+            <span style={{ color: "lightgreen", marginRight: 3 }}>
+              {Math.max(...item.results) + nextBiggest(item.results)}
+            </span>
+            Worst Two:{" "}
+            <span style={{ color: "red" }}>
+              {Math.min(...item.results) + nextBiggest(item.results)}
+            </span>
+          </span>
+        )}
       </div>
     );
   };
@@ -243,18 +252,6 @@ function App() {
             <span style={{ color: "#D2691E" }}>
               {mathToEvaluate + " = " + evaluateMath(mathToEvaluate)}
             </span>
-            {imageURL && (
-              <div
-                style={{
-                  backgroundImage: `url(${imageURL})`,
-                  backgroundSize: "cover",
-                  height: 150,
-                  width: 200,
-                  overflow: "hidden",
-                  borderRadius: 5,
-                }}
-              ></div>
-            )}
           </div>
         );
       }
@@ -477,42 +474,7 @@ function App() {
 
       const isOpen = await OBR.action.isOpen();
 
-      if (lastMessage && !cooldown && isOBRReady && !isOpen) {
-        if (lastMessage.message) {
-          if (!lastMessage.whisper || role === "GM") {
-            OBR.notification.show(
-              lastMessage.user +
-                ": " +
-                lastMessage.message +
-                (lastMessage.whisper ? " (WHISPER)" : ""),
-              "DEFAULT"
-            );
-          }
-        } else if (lastMessage.result) {
-          const isCrit = false;
-          const isFumble = false;
-          OBR.notification.show(
-            lastMessage.user +
-              " Rolled " +
-              (isCrit
-                ? "CRITICAL"
-                : isFumble
-                ? "FUMBLE"
-                : lastMessage.diceOneResult +
-                  lastMessage.diceTwoResult +
-                  lastMessage.bonus) +
-              (lastMessage.damage !== 0 &&
-              lastMessage.damage !== "" &&
-              !isFumble
-                ? " DMG: " +
-                  (lastMessage.useHR
-                    ? HR + lastMessage.damage
-                    : lastMessage.damage)
-                : ""),
-            isCrit ? "WARNING" : isFumble ? "ERROR" : "INFO"
-          );
-          setCoolDown(true);
-        }
+      if (lastMessage && isOBRReady && !isOpen) {
         if (isOBRReady) {
           const isOpen = await OBR.action.isOpen();
           if (!isOpen) {
@@ -523,9 +485,6 @@ function App() {
           }
         }
       }
-      setTimeout(() => {
-        setCoolDown(false);
-      }, 4000);
     };
 
     if (isOBRReady) {
@@ -629,10 +588,20 @@ function App() {
     }
   };
 
-  const addRoll = async () => {
+  const addRoll = async (diceCount, bonus, stat) => {
+    const results = [];
+
+    for (let i = 0; i < diceCount; i++) {
+      results.push(generateRandomNumber(6));
+    }
+
     const newMessage = {
       id: Date.now(),
       user: name,
+      codename: player.details.codename,
+      results,
+      bonus,
+      stat,
     };
     const newChat = [...myChat, newMessage];
 
@@ -700,10 +669,8 @@ function App() {
   const changeDiceCount = (evt) => {
     if (evt.target.value != "") {
       setDiceCount(parseInt(evt.target.value, ""));
-      saveStats({ diceCount: parseInt(evt.target.value) });
     } else {
       setDiceCount("");
-      saveStats({ diceCount: "" });
     }
   };
 
@@ -809,7 +776,7 @@ function App() {
               setTab("chat");
             }}
           >
-            Load
+            Open
           </button>
           <button
             className="button"
@@ -886,7 +853,7 @@ function App() {
           alignItems: "center",
         }}
       >
-        <span className="dice-result" style={{ marginRight: 4 }}>
+        <span className="outline" style={{ marginRight: 4, fontSize: 11 }}>
           Codename:
         </span>
         <input
@@ -954,7 +921,12 @@ function App() {
           value={player.attributes.FRC}
           onChange={changeFRC}
         />
-        <button className="button-dice" onClick={() => {}}>
+        <button
+          className="button-dice"
+          onClick={() => {
+            addRoll(2, player.attributes.FRC, "Forceful");
+          }}
+        >
           Forceful
         </button>
         <input
@@ -967,7 +939,12 @@ function App() {
           value={player.attributes.TAC}
           onChange={changeTAC}
         />
-        <button className="button-dice" onClick={() => {}}>
+        <button
+          className="button-dice"
+          onClick={() => {
+            addRoll(2, player.attributes.TAC, "Tactical");
+          }}
+        >
           Tactical
         </button>
         <input
@@ -980,7 +957,12 @@ function App() {
           value={player.attributes.CRE}
           onChange={changeCRE}
         />
-        <button className="button-dice" onClick={() => {}}>
+        <button
+          className="button-dice"
+          onClick={() => {
+            addRoll(2, player.attributes.CRE, "Creative");
+          }}
+        >
           Creative
         </button>
 
@@ -997,7 +979,9 @@ function App() {
         <button
           className="button-dice"
           style={{ marginRight: 0 }}
-          onClick={() => {}}
+          onClick={() => {
+            addRoll(2, player.attributes.RFX, "Reflexive");
+          }}
         >
           Reflexive
         </button>
@@ -1035,7 +1019,9 @@ function App() {
           style={{
             width: 80,
           }}
-          onClick={() => {}}
+          onClick={() => {
+            addRoll(diceCount);
+          }}
         >
           Roll D6's
         </button>
@@ -1290,20 +1276,22 @@ function App() {
           </button>
         </div>
 
-        <div
-          className="outline"
-          style={{
-            fontSize: 11,
-            borderRadius: 4,
-            background: "#333",
-            padding: 10,
-            marginTop: 4,
-            marginBottom: 4,
-            color: "lightgrey",
-          }}
-        >
-          {getRoleByNumber(player.details.role).Text}
-        </div>
+        {player.details.role !== 0 && (
+          <div
+            className="outline"
+            style={{
+              fontSize: 11,
+              borderRadius: 4,
+              background: "#333",
+              padding: 10,
+              marginTop: 4,
+              marginBottom: 4,
+              color: "lightgrey",
+            }}
+          >
+            {getRoleByNumber(player.details.role).Text}
+          </div>
+        )}
       </div>
     );
   };
@@ -1456,6 +1444,7 @@ function App() {
         }}
       >
         <div
+          id="chatbox"
           className="scrollable-container"
           style={{
             backgroundColor: "#333",
