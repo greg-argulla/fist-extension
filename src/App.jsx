@@ -61,7 +61,7 @@ function App() {
   const [cookiesNotEnabled, setCookiesNotEnabled] = useState(false);
   const [player, setPlayer] = useState(null);
   const [timeoutID, setTimeoutID] = useState(null);
-  const [tab, setTab] = useState("playerList");
+  const [tab, setTab] = useState("chat");
   const [playerList, setPlayerList] = useState("chat");
 
   const createPlayerList = async (metadata) => {
@@ -1497,7 +1497,6 @@ function App() {
           marginLeft: 15,
           marginRight: 15,
           marginTop: 10,
-          height: "100%",
           overflow: "scroll",
           height: 410,
         }}
@@ -1575,6 +1574,10 @@ function App() {
     );
   };
 
+  const renderGenerators = () => {
+    return "";
+  };
+
   return (
     <div
       style={{
@@ -1584,10 +1587,11 @@ function App() {
         overflow: "hidden",
       }}
     >
-      {tab === "playerList" && renderPlayerList()}
+      {/* {tab === "playerList" && renderPlayerList()}
       {tab !== "playerList" && renderInfo()}
       {tab !== "playerList" && renderDice()}
-      {tab !== "playerList" && renderStats()}
+      {tab !== "playerList" && renderStats()} */}
+      {renderGenerators()}
       {tab === "chat" && renderChat()}
       {tab === "details" && renderDetails()}
     </div>

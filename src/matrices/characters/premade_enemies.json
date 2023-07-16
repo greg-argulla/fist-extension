@@ -162,8 +162,8 @@
     ],
     "Notes": [
       "MONARCH: Ikara, a squid-form kaiju almost as old as the oceans themselves, first appears in the coastal waters (or mysteriously rain-soaked outskirts) of a city (`/matrix location city`) whose leaders are dumping toxic waste into the water. Before making landfall, Ikara will deploy her Herald in an effort to avert her righteous destruction.",
-	  "HERALD (BOSS MOVE): An ethereal sea wizard rises from the water to speak to any authority figures present in the city. The herald warns of Ikara's wrath if the dumping is not stopped, but the leaders never listen.",
-	  "LESSON (BOSS MOVE): If six hours have passed since the Herald's arrival, Ikara will move to destroy the city. Ikara gains \"CHOKE 6: Return to the ocean,\" but only CHOKES when taking more than 6 DAMAGE."
+      "HERALD (BOSS MOVE): An ethereal sea wizard rises from the water to speak to any authority figures present in the city. The herald warns of Ikara's wrath if the dumping is not stopped, but the leaders never listen.",
+      "LESSON (BOSS MOVE): If six hours have passed since the Herald's arrival, Ikara will move to destroy the city. Ikara gains \"CHOKE 6: Return to the ocean,\" but only CHOKES when taking more than 6 DAMAGE."
     ]
   },
   {
@@ -256,8 +256,8 @@
     ],
     "Notes": [
       "CLASSIFIED: Mobile Platform CANTICLE is the most powerful mechanized bipedal weapons system in the world, and is kept absolutely topsecret by the faction (`/matrix faction`) who owns it.",
-	  "EJECT (BOSS MOVE): If CANTICLE drops below 20 HP, the pilot may eject with the neural uplink headgear (accessory) equipped and control the mech remotely.",
-	  "LAUNCH (BOSS MOVE): The pilot may activate the onboard ICBM nuclear warhead at will. This immobilizes the mech and starts a 60-second countdown only stoppable from the cockpit."
+      "EJECT (BOSS MOVE): If CANTICLE drops below 20 HP, the pilot may eject with the neural uplink headgear (accessory) equipped and control the mech remotely.",
+      "LAUNCH (BOSS MOVE): The pilot may activate the onboard ICBM nuclear warhead at will. This immobilizes the mech and starts a 60-second countdown only stoppable from the cockpit."
     ]
   },
   {
@@ -385,7 +385,7 @@
     ],
     "Notes": [
       "COMPULSION: The writhing mass of flesh is born when artifical flesh-eating parasites are allowed to escape containment. Unbeknownst to their original engineers, these parasites exhibit odd contagious behavior that encourages infected victims to converge on one spot and fuse. If a PC's skin is exposed to the pathogen, they must roll to resist this parasitic compulsion.",
-	  "ABSORB (BOSS MOVE): When hurt, the writhing mass of flesh may try to absorb a FIST operative in a bid to bulk up its biomass. When this move is activated, the writhing mass's next attack will be against the most-injured PC. If it kills them, the mass heals equal to their max HP."
+      "ABSORB (BOSS MOVE): When hurt, the writhing mass of flesh may try to absorb a FIST operative in a bid to bulk up its biomass. When this move is activated, the writhing mass's next attack will be against the most-injured PC. If it kills them, the mass heals equal to their max HP."
     ]
   }
 ]
