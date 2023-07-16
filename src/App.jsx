@@ -660,6 +660,7 @@ function App() {
     OBR.scene.setMetadata({
       "fist.extension/metadata": metadataChange,
     });
+    setTab("chat");
 
     setTimeout(() => {
       var objDiv = document.getElementById("chatbox");
@@ -1182,6 +1183,7 @@ function App() {
           style={{ width: 40, marginRight: 4 }}
           onClick={() => {
             addDescription(item);
+            setTab("chat");
           }}
         >
           Show
@@ -1247,6 +1249,7 @@ function App() {
             style={{ marginRight: 4, width: 40, marginLeft: "auto" }}
             onClick={() => {
               addDescription(trait.Name + ` (${trait.Number})`, trait.Effect);
+              setTab("chat");
             }}
           >
             Show
@@ -1327,6 +1330,7 @@ function App() {
                   ` (${player.details.role})`,
                 getRoleByNumber(player.details.role).Text
               );
+              setTab("chat");
             }}
           >
             Show
