@@ -80,7 +80,7 @@
       "Tweed suit, round glasses, floppy hair"
     ],
     "Notes": [
-      "THOUGHTCRIME: The archivist has researched and learned a random spell (`/lore spell`) that they are debating whether or not to share with their CYCLOPS superiors. They are prone to muttering commentary into their tape recorder, frequently naming a listener who may or may not exist."
+      "THOUGHTCRIME: The archivist has researched and learned a random spell (`/matrix lore spell`) that they are debating whether or not to share with their CYCLOPS superiors. They are prone to muttering commentary into their tape recorder, frequently naming a listener who may or may not exist."
     ]
   },
   {
@@ -97,7 +97,7 @@
     ]
   },
   {
-    "Head": "CYCLOPS SCIENTIST (3 HP, CHOKE 4: Release a dangerous experiment (`/enemy experiment`))",
+    "Head": "CYCLOPS SCIENTIST (3 HP, CHOKE 4: Release a dangerous experiment (`/matrix enemy experiment`))",
     "Features": [
       "CYCLOPS tranquilizer gun (0 DAMAGE, NON-LETHAL)",
       "Incomprehensible notebook (details 1D6 more experiments)",
@@ -123,7 +123,7 @@
     "Features": [
       "Helm of Januarius (accessory)",
       "Field medic's attire (1 ARMOR)",
-      "The Goat-skin Grimoire (2D6 spells (`/lore spell`))"
+      "The Goat-skin Grimoire (2D6 spells (`/matrix lore spell`))"
     ],
     "Notes": [
       "MAGE: Once an MSF field medic deployed to Jerusalem, Stigmata was introduced to magic when they found an eleventh-century helmet in the rubble that possessed them with the spirit of a mad crusader. The two now bickeringly share a body\u2014and spells, with anyone they deem worthy."
@@ -173,7 +173,7 @@
       "Pilot's headset (relay intel to FIST at any time)",
       "Balaclava (theoretically hides identity)",
       "Stunning eye makeup (very identifiable)",
-      "Supply drop apparatus (random crate, `/gear crate`)"
+      "Supply drop apparatus (random crate, `/matrix gear crate`)"
     ],
     "Notes": [
       "SUPPORT: Libra Sun may be used by the ref as FIST's chief of transport\u2014a convenient bit of plot to ferry them between missions. Libra may also provide voiceover backstory for major characters FIST encounters, or remind them of game mechanics they may have forgotten. Cheery, casual, and competent, Libra Sun is the type of support agent most operatives can only dream of. She has a tendency to go off on tangents, and likes to refer to game terms directly, like wishing the team \"good rolls.\""
@@ -256,7 +256,7 @@
   {
     "Head": "NARCO-SUBMARINE (18 HP)",
     "Features": [
-      "Criminal (`/faction criminals) crew (4D6 crewmembers)",
+      "Criminal (`/matrix faction criminals) crew (4D6 crewmembers)",
       "Worn-down hull (2 ARMOR)",
       "Retrofitted torpedoes (2D6 DAMAGE, six uses)",
       "Drug payload (roll 1D6 for payload type: 1. Cannabis    4. Cocaine 2. Magic mushrooms 5. Heroin 3. Artifical psychedelics 6. Prescription drugs"
@@ -432,7 +432,7 @@
       "Raincoat, hood up, furtive behavior"
     ],
     "Notes": [
-      "WANTED: The whistleblower's knowledge of a top-secret coverup (`/lore coverup`) is burning a hole in their brain. At any given time, 3 other NPCs are gunning for the whistleblower to take them down before the info is leaked."
+      "WANTED: The whistleblower's knowledge of a top-secret coverup (`/matrix lore coverup`) is burning a hole in their brain. At any given time, 3 other NPCs are gunning for the whistleblower to take them down before the info is leaked."
     ]
   }
 ]
