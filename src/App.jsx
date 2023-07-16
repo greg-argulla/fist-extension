@@ -162,7 +162,7 @@ function App() {
     });
     if (item.bonus) total += item.bonus;
     return (
-      <div className="roll-detail" style={{ textAlign: "center" }}>
+      <div className="roll-detail" style={{ textAlign: "center" }} key={index}>
         {item.codename} rolled{item.stat ? " " + item.stat : ""}:
         {item.results.map((item, index) => {
           if (index === 0) {
@@ -242,6 +242,31 @@ function App() {
     }
 
     const { item, index } = JSON.parse(propsString);
+
+    if (item.title) {
+      return (
+        <div style={{ marginTop: 4 }}>
+          <div className="outline">
+            <div onClick={() => setToPM(item.user)}>{item.user}</div>
+          </div>
+          <div className="skill-detail">
+            <div style={{ fontSize: 13, color: "darkorange" }}>
+              {item.title}
+            </div>
+            <hr
+              style={{
+                marginTop: 4,
+                marginBottom: 4,
+                borderColor: "grey",
+                backgroundColor: "grey",
+                color: "grey",
+              }}
+            ></hr>
+            <div>{item.description}</div>
+          </div>
+        </div>
+      );
+    }
 
     if (item.message || imageURL) {
       if (item.message.charAt(0) === "=") {
@@ -512,6 +537,28 @@ function App() {
     OBR.scene.setMetadata({
       "fist.extension/metadata": clearedMetaData,
     });
+  };
+
+  const addDescription = async (title, description) => {
+    const newMessage = { id: Date.now(), user: name, title, description };
+    const newChat = [...myChat, newMessage];
+
+    const metadataGet = await OBR.scene.getMetadata();
+    const metadata = metadataGet["fist.extension/metadata"];
+
+    let metadataChange = { ...metadata };
+    metadataChange[id] = newChat;
+
+    OBR.scene.setMetadata({
+      "fist.extension/metadata": metadataChange,
+    });
+
+    setTimeout(() => {
+      var objDiv = document.getElementById("chatbox");
+      if (objDiv) {
+        objDiv.scrollTop = objDiv.scrollHeight;
+      }
+    }, 100);
   };
 
   const addMessage = async () => {
@@ -1133,7 +1180,9 @@ function App() {
         <button
           className="button"
           style={{ width: 40, marginRight: 4 }}
-          onClick={() => {}}
+          onClick={() => {
+            addDescription(item);
+          }}
         >
           Show
         </button>
@@ -1196,7 +1245,9 @@ function App() {
           <button
             className="button"
             style={{ marginRight: 4, width: 40, marginLeft: "auto" }}
-            onClick={() => {}}
+            onClick={() => {
+              addDescription(trait.Name + ` (${trait.Number})`, trait.Effect);
+            }}
           >
             Show
           </button>
@@ -1259,9 +1310,9 @@ function App() {
               updatePlayer(playerGet);
             }}
           >
-            {rolesList.map((item) => {
+            {rolesList.map((item, index) => {
               return (
-                <option value={item.Number} title={item.Text}>
+                <option key={index} value={item.Number} title={item.Text}>
                   {item.Name} ({item.Number})
                 </option>
               );
@@ -1270,7 +1321,13 @@ function App() {
           <button
             className="button"
             style={{ width: 40, marginLeft: "auto" }}
-            onClick={() => {}}
+            onClick={() => {
+              addDescription(
+                getRoleByNumber(player.details.role).Name +
+                  ` (${player.details.role})`,
+                getRoleByNumber(player.details.role).Text
+              );
+            }}
           >
             Show
           </button>
@@ -1331,9 +1388,9 @@ function App() {
               setSelectedTrait(parseInt(evt.target.value));
             }}
           >
-            {traitsList.map((item) => {
+            {traitsList.map((item, index) => {
               return (
-                <option value={item.Number} title={item.Effect}>
+                <option key={index} value={item.Number} title={item.Effect}>
                   {item.Name} ({item.Number})
                 </option>
               );

@@ -83,6 +83,14 @@ hr {
   background-color: #222;
 }
 
+.skill-detail {
+  font-size: 10px;
+  background-color: #111;
+  padding: 10px;
+  border-radius: 5px;
+  color: #ddd;
+}
+
 .button-dice {
   width: 65px;
   height: 25px;
