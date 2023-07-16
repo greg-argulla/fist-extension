@@ -17,7 +17,7 @@ const AGENT = () => {
     id: Date.now(),
     details: {
       codename: "",
-      role: "",
+      role: 11,
     },
     attributes: {
       FRC: 0,
@@ -52,6 +52,7 @@ function App() {
   const [isOBRReady, setIsOBRReady] = useState(false);
   const [cooldown, setCoolDown] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [selectedTrait, setSelectedTrait] = useState(111);
   const [name, setName] = useState("");
   const [id, setId] = useState("");
   const [role, setRole] = useState("PLAYER");
@@ -101,6 +102,20 @@ function App() {
         "fist.character.extension/metadata": metadataChange,
       });
       setTimeoutID(null);
+    }
+  };
+
+  const removePlayer = async (id) => {
+    const metadataData = await OBR.scene.getMetadata();
+    const metadata = metadataData["fist.character.extension/metadata"];
+    let metadataChange = { ...metadata };
+
+    if (confirm("Are you sure you want to delete the character?") == true) {
+      delete metadataChange[id];
+
+      OBR.scene.setMetadata({
+        "fist.character.extension/metadata": metadataChange,
+      });
     }
   };
 
@@ -803,7 +818,9 @@ function App() {
               width: 25,
               color: "darkred",
             }}
-            onClick={() => {}}
+            onClick={() => {
+              removePlayer(data.id);
+            }}
           >
             ✖
           </button>
@@ -827,34 +844,32 @@ function App() {
 
   const renderPlayerList = () => {
     return (
-      <div>
-        <div
-          className="scrollable-container"
-          style={{
-            backgroundColor: "#333",
-            padding: 10,
-            overflow: "scroll",
-            height: 540,
-            border: "1px solid #222",
+      <div
+        className="scrollable-container"
+        style={{
+          backgroundColor: "#444",
+          padding: 20,
+          overflow: "scroll",
+          height: 540,
+          border: "1px solid #222",
+        }}
+      >
+        <div className="outline" style={{ fontSize: 14, color: "lightgrey" }}>
+          FIST - Freelance Infantry Strike Team
+        </div>
+        <hr></hr>
+        {playerList.map((item, index) => {
+          return playerItem(item, index);
+        })}
+        <button
+          className="button"
+          style={{ fontWeight: "bolder", width: 80, float: "right" }}
+          onClick={() => {
+            addPlayer();
           }}
         >
-          <div className="outline" style={{ fontSize: 14, color: "lightgrey" }}>
-            FIST - Freelance Infantry Strike Team
-          </div>
-          <hr></hr>
-          {playerList.map((item, index) => {
-            return playerItem(item, index);
-          })}
-          <button
-            className="button"
-            style={{ fontWeight: "bolder", width: 80, float: "right" }}
-            onClick={() => {
-              addPlayer();
-            }}
-          >
-            Add Character
-          </button>
-        </div>
+          Add Character
+        </button>
       </div>
     );
   };
@@ -1087,7 +1102,7 @@ function App() {
           type="number"
           style={{
             width: 20,
-            color: "yellow",
+            color: "lightgreen",
             marginRight: 0,
           }}
           value={player.stats.wardice}
@@ -1101,7 +1116,7 @@ function App() {
     );
   };
 
-  const item = (item, index) => {
+  const item = (item, index, traitItem) => {
     return (
       <div
         key={index}
@@ -1115,7 +1130,12 @@ function App() {
           }}
           value={item}
           placeholder="Item and description"
-          onChange={(evt) => {}}
+          onChange={(evt) => {
+            const playerGet = { ...player };
+            playerGet.items[index] = evt.target.value;
+            updatePlayer(playerGet);
+          }}
+          readOnly={traitItem}
         />
         <button
           className="button"
@@ -1131,13 +1151,23 @@ function App() {
         >
           Show
         </button>
-        <button
-          className="button"
-          style={{ width: 25, color: "darkred" }}
-          onClick={() => {}}
-        >
-          ✖
-        </button>
+        {!traitItem && (
+          <button
+            className="button"
+            style={{ width: 25, color: "darkred" }}
+            onClick={() => {
+              if (
+                confirm("Are you sure you want to delete the item?") == true
+              ) {
+                const playerGet = { ...player };
+                playerGet.items.splice(index, 1);
+                updatePlayer(playerGet);
+              }
+            }}
+          >
+            ✖
+          </button>
+        )}
       </div>
     );
   };
@@ -1187,7 +1217,15 @@ function App() {
           <button
             className="button"
             style={{ width: 25, color: "darkred" }}
-            onClick={() => {}}
+            onClick={() => {
+              if (
+                confirm("Are you sure you want to delete the trait?") == true
+              ) {
+                const playerGet = { ...player };
+                playerGet.traits.splice(index, 1);
+                updatePlayer(playerGet);
+              }
+            }}
           >
             ✖
           </button>
@@ -1211,9 +1249,9 @@ function App() {
     );
   };
 
-  const playerRole = (playerRole, index) => {
+  const playerRole = () => {
     return (
-      <div key={index}>
+      <div>
         <hr />
         <div style={{ display: "flex", alignItems: "center" }}>
           <Text>Role: </Text>
@@ -1228,28 +1266,27 @@ function App() {
               border: "1px solid #222",
               marginRight: 4,
             }}
+            value={player.details.role}
+            onChange={(evt) => {
+              const playerGet = { ...player };
+              playerGet.details.role = parseInt(evt.target.value);
+              updatePlayer(playerGet);
+            }}
           >
             {rolesList.map((item) => {
               return (
-                <option value={item.Name} title={item.Text}>
-                  {item.Name}
+                <option value={item.Number} title={item.Text}>
+                  {item.Name} ({item.Number})
                 </option>
               );
             })}
           </select>
           <button
             className="button"
-            style={{ marginRight: 4, width: 40, marginLeft: "auto" }}
+            style={{ width: 40, marginLeft: "auto" }}
             onClick={() => {}}
           >
             Show
-          </button>
-          <button
-            className="button"
-            style={{ width: 25, color: "darkred" }}
-            onClick={() => {}}
-          >
-            ✖
           </button>
         </div>
 
@@ -1265,7 +1302,7 @@ function App() {
             color: "lightgrey",
           }}
         >
-          {playerRole.Text}
+          {getRoleByNumber(player.details.role).Text}
         </div>
       </div>
     );
@@ -1275,19 +1312,20 @@ function App() {
     return traitsList.find((item) => item.Number === number);
   };
 
+  const getRoleByNumber = (number) => {
+    return rolesList.find((item) => item.Number === number);
+  };
+
   const renderTraits = () => {
     return (
       <>
-        <div className="outline" style={{ marginBottom: "1em" }}>
-          Traits and Abilities:
-        </div>
-        <hr></hr>
-        {trait(getTraitByNumber(356))}
-        {trait(traitsList[80])}
-        {trait(traitsList[32])}
         <div
-          style={{ marginBottom: "1em", display: "flex", alignItems: "center" }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
         >
+          <Text>Traits:</Text>
           <select
             autocomplete="on"
             style={{
@@ -1300,10 +1338,14 @@ function App() {
               marginRight: 4,
               marginLeft: "auto",
             }}
+            value={selectedTrait}
+            onChange={(evt) => {
+              setSelectedTrait(parseInt(evt.target.value));
+            }}
           >
             {traitsList.map((item) => {
               return (
-                <option value={item.Name} title={item.Effect}>
+                <option value={item.Number} title={item.Effect}>
                   {item.Name} ({item.Number})
                 </option>
               );
@@ -1316,27 +1358,31 @@ function App() {
               width: 70,
               marginTop: 2,
             }}
-            onClick={() => {}}
+            onClick={() => {
+              const playerGet = { ...player };
+              playerGet.traits.push(selectedTrait);
+              updatePlayer(playerGet);
+            }}
           >
             Add Trait
           </button>
-          <hr />
         </div>
+        <hr></hr>
+        {player.traits.map((item, index) => {
+          return trait(getTraitByNumber(item), index);
+        })}
       </>
     );
   };
 
   const renderItems = () => {
     return (
-      <>
-        <div className="outline" style={{ marginBottom: "1em" }}>
-          Items and Equipment:
-        </div>
-        <hr />
-        {item(traitsList[0].Item)}
-        {item(traitsList[80].Item)}
-        {item(traitsList[32].Item)}
-        <div style={{ display: "flex" }}>
+      <div style={{ marginBottom: "1em" }}>
+        <div
+          className="outline"
+          style={{ marginTop: "1em", display: "flex", alignItems: "center" }}
+        >
+          Inventory:
           <button
             className="button"
             style={{
@@ -1345,12 +1391,37 @@ function App() {
               marginTop: 2,
               marginLeft: "auto",
             }}
-            onClick={() => {}}
+            onClick={() => {
+              const playerGet = { ...player };
+              playerGet.items.push("");
+              updatePlayer(playerGet);
+            }}
           >
             Add Item
           </button>
         </div>
-      </>
+        <hr />
+
+        <div className="outline" style={{ color: "lightgrey" }}>
+          Trait Items:
+        </div>
+        {player.traits.map((data, index) => {
+          return item(getTraitByNumber(data).Item, index, true);
+        })}
+        {player.items.length ? (
+          <div
+            className="outline"
+            style={{ color: "lightgrey", marginTop: "1em" }}
+          >
+            Looted/Other Items:
+          </div>
+        ) : (
+          ""
+        )}
+        {player.items.map((data, index) => {
+          return item(data, index, false);
+        })}
+      </div>
     );
   };
 
@@ -1369,7 +1440,7 @@ function App() {
       >
         {renderTraits()}
         {renderItems()}
-        {playerRole(rolesList[0])}
+        {playerRole()}
       </div>
     );
   };
@@ -1450,8 +1521,8 @@ function App() {
     >
       {tab === "playerList" && renderPlayerList()}
       {tab !== "playerList" && renderInfo()}
-      {tab !== "playerList" && renderStats()}
       {tab !== "playerList" && renderDice()}
+      {tab !== "playerList" && renderStats()}
       {tab === "chat" && renderChat()}
       {tab === "details" && renderDetails()}
     </div>
