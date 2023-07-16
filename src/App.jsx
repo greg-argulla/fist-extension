@@ -478,9 +478,8 @@ function App() {
 
       OBR.action.onOpenChange(async (isOpen) => {
         // React to the action opening or closing
-        if (isOpen) {
+        if (isOpen && tab === "chat") {
           setUnreadCount(0);
-          OBR.action.setBadgeText(undefined);
         }
       });
 
@@ -494,18 +493,21 @@ function App() {
   }, [isOBRReady]);
 
   useEffect(() => {
+    if (unreadCount > 0) {
+      OBR.action.setBadgeText("" + unreadCount);
+    } else OBR.action.setBadgeText(undefined);
+  }, [unreadCount]);
+
+  useEffect(() => {
     const updateMessages = async () => {
       const lastMessage = chat[chat.length - 1];
 
-      const isOpen = await OBR.action.isOpen();
-
-      if (lastMessage && isOBRReady && !isOpen) {
+      if (lastMessage && isOBRReady) {
         if (isOBRReady) {
           const isOpen = await OBR.action.isOpen();
-          if (!isOpen) {
+          if (!isOpen || tab !== "chat") {
             if (!lastMessage.whisper || role === "GM") {
               setUnreadCount(unreadCount + 1);
-              OBR.action.setBadgeText("" + (unreadCount + 1));
             }
           }
         }
@@ -661,6 +663,7 @@ function App() {
       "fist.extension/metadata": metadataChange,
     });
     setTab("chat");
+    setUnreadCount(0);
 
     setTimeout(() => {
       var objDiv = document.getElementById("chatbox");
@@ -822,6 +825,7 @@ function App() {
             onClick={() => {
               setPlayer(data);
               setTab("chat");
+              setUnreadCount(0);
             }}
           >
             Open
@@ -925,10 +929,18 @@ function App() {
           }}
           onClick={() => {
             if (tab === "chat") setTab("details");
-            else setTab("chat");
+            else {
+              setTab("chat");
+              setUnreadCount(0);
+            }
           }}
         >
-          {tab === "chat" ? "Role / Traits /Inventory" : "Chat"}
+          {tab === "chat" ? "Role / Traits /Inventory" : "Chat "}
+          {tab !== "chat" && (
+            <span style={{ color: "red" }}>
+              {unreadCount ? `(${unreadCount})` : ""}
+            </span>
+          )}
         </button>
         <button
           className="button-dice"
@@ -1184,6 +1196,7 @@ function App() {
           onClick={() => {
             addDescription(item);
             setTab("chat");
+            setUnreadCount(0);
           }}
         >
           Show
@@ -1250,6 +1263,7 @@ function App() {
             onClick={() => {
               addDescription(trait.Name + ` (${trait.Number})`, trait.Effect);
               setTab("chat");
+              setUnreadCount(0);
             }}
           >
             Show
@@ -1331,6 +1345,7 @@ function App() {
                 getRoleByNumber(player.details.role).Text
               );
               setTab("chat");
+              setUnreadCount(0);
             }}
           >
             Show
