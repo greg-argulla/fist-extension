@@ -4,19 +4,50 @@ import OBR from "@owlbear-rodeo/sdk";
 import landingBG from "./assets/bg.jpg";
 import refresh from "./assets/refresh.png";
 import "./App.css";
+import traitsList from "./traits.json";
+import rolesList from "./roles.json";
 
 const Text = (props) => {
   const { children } = props;
   return <span className="outline">{children}</span>;
 };
 
+const AGENT = () => {
+  return {
+    id: Date.now(),
+    details: {
+      codename: "",
+      role: "",
+    },
+    attributes: {
+      FRC: 0,
+      TAC: 0,
+      CRE: 0,
+      RFX: 0,
+    },
+    stats: {
+      hp: 6,
+      maxHP: 6,
+      armor: 0,
+      wardice: 0,
+    },
+    traits: [],
+    items: [],
+    dead: false,
+  };
+};
+
+const standardIssueItems = [
+  "Balaclava (hides identity)",
+  "Flashlight (can be used as a weapon attachment)",
+  "Knife (1D6 DAMAGE)",
+  "MRE field rations (+1D6 HP, one use)",
+  "Pistol (1D6 DAMAGE)",
+  "Riot shield (1 ARMOR, equip as weapon)",
+];
+
 function App() {
-  const [FRC, setFRC] = useState(0);
-  const [TAC, setTAC] = useState(0);
-  const [CRE, setCRE] = useState(0);
-  const [RFX, setRFX] = useState(0);
-  const [MOD, setMOD] = useState(0);
-  const [diceCount, setDiceCount] = useState(0);
+  const [diceCount, setDiceCount] = useState(1);
   const [text, setText] = useState("");
   const [isOBRReady, setIsOBRReady] = useState(false);
   const [cooldown, setCoolDown] = useState(true);
@@ -28,6 +59,50 @@ function App() {
   const [chatToCheckChanges, setChatToCheckChanges] = useState([]);
   const [myChat, setMyChat] = useState([]);
   const [cookiesNotEnabled, setCookiesNotEnabled] = useState(false);
+  const [player, setPlayer] = useState(null);
+  const [timeoutID, setTimeoutID] = useState(null);
+  const [tab, setTab] = useState("playerList");
+  const [playerList, setPlayerList] = useState("chat");
+
+  const createPlayerList = async (metadata) => {
+    const metadataGet = metadata["fist.character.extension/metadata"];
+    const playerListGet = [];
+    const keys = Object.keys(metadataGet);
+    keys.forEach((key) => {
+      playerListGet.push(metadataGet[key]);
+    });
+    return playerListGet;
+  };
+
+  const updatePlayer = (playerGet) => {
+    if (!timeoutID) {
+      const myTimeout = setTimeout(() => {
+        savePlayer();
+      }, 500);
+      setTimeoutID(myTimeout);
+    } else {
+      clearTimeout(timeoutID);
+      const myTimeout = setTimeout(() => {
+        savePlayer();
+      }, 500);
+      setTimeoutID(myTimeout);
+    }
+    setPlayer(playerGet);
+  };
+
+  const savePlayer = async () => {
+    if (player) {
+      const metadataData = await OBR.scene.getMetadata();
+      const metadata = metadataData["fist.character.extension/metadata"];
+      let metadataChange = { ...metadata };
+      metadataChange[player.id] = { ...player, lastEdit: id };
+
+      OBR.scene.setMetadata({
+        "fist.character.extension/metadata": metadataChange,
+      });
+      setTimeoutID(null);
+    }
+  };
 
   const setToPM = (user) => {
     if (role === "GM") {
@@ -245,6 +320,11 @@ function App() {
         if (ready) {
           const metadata = await OBR.scene.getMetadata();
 
+          if (metadata["fist.character.extension/metadata"]) {
+            const playerListGet = await createPlayerList(metadata);
+            setPlayerList(playerListGet);
+          }
+
           if (metadata["fist.extension/metadata"]) {
             const currentChat = await createChatArray(metadata);
             setChatToCheckChanges(currentChat);
@@ -275,6 +355,12 @@ function App() {
 
       if (await OBR.scene.isReady()) {
         const metadata = await OBR.scene.getMetadata();
+
+        if (metadata["fist.character.extension/metadata"]) {
+          const playerListGet = await createPlayerList(metadata);
+          setPlayerList(playerListGet);
+        }
+
         if (metadata["fist.extension/metadata"]) {
           const currentChat = await createChatArray(metadata);
           setChatToCheckChanges(currentChat);
@@ -348,6 +434,9 @@ function App() {
       OBR.scene.onMetadataChange(async (metadata) => {
         const currentChat = await createChatArray(metadata);
         setChatToCheckChanges(currentChat);
+
+        const playerListGet = await createPlayerList(metadata);
+        setPlayerList(playerListGet);
       });
 
       OBR.action.onOpenChange(async (isOpen) => {
@@ -363,17 +452,6 @@ function App() {
       } catch {
         setCookiesNotEnabled(true);
         return;
-      }
-
-      const stats = JSON.parse(localStorage.getItem("fist.extension/metadata"));
-
-      if (stats) {
-        setFRC(stats.FRC);
-        setTAC(stats.TAC);
-        setCRE(stats.CRE);
-        setRFX(stats.RFX);
-        setMOD(stats.MOD);
-        setDiceCount(stats.diceCount);
       }
     }
   }, [isOBRReady]);
@@ -567,66 +645,41 @@ function App() {
     return randomNum;
   };
 
-  const saveStats = (replace) => {
-    localStorage.setItem(
-      "fist.extension/metadata",
-      JSON.stringify({
-        FRC,
-        TAC,
-        CRE,
-        RFX,
-        MOD,
-        diceCount,
-        ...replace,
-      })
-    );
-  };
-
   const changeFRC = (evt) => {
+    const playerGet = { ...player };
     if (evt.target.value != "") {
-      setFRC(parseInt(evt.target.value, ""));
-      saveStats({ FRC: parseInt(evt.target.value) });
+      playerGet.attributes.FRC = parseInt(evt.target.value, "");
     } else {
-      setFRC("");
-      saveStats({ FRC: "" });
+      playerGet.attributes.FRC = "";
     }
+    updatePlayer(playerGet);
   };
   const changeTAC = (evt) => {
+    const playerGet = { ...player };
     if (evt.target.value != "") {
-      setTAC(parseInt(evt.target.value, ""));
-      saveStats({ TAC: parseInt(evt.target.value) });
+      playerGet.attributes.TAC = parseInt(evt.target.value, "");
     } else {
-      setTAC("");
-      saveStats({ TAC: "" });
+      playerGet.attributes.TAC = "";
     }
+    updatePlayer(playerGet);
   };
   const changeCRE = (evt) => {
+    const playerGet = { ...player };
     if (evt.target.value != "") {
-      setCRE(parseInt(evt.target.value, ""));
-      saveStats({ CRE: parseInt(evt.target.value) });
+      playerGet.attributes.CRE = parseInt(evt.target.value, "");
     } else {
-      setCRE("");
-      saveStats({ CRE: "" });
+      playerGet.attributes.CRE = "";
     }
+    updatePlayer(playerGet);
   };
   const changeRFX = (evt) => {
+    const playerGet = { ...player };
     if (evt.target.value != "") {
-      setRFX(parseInt(evt.target.value, ""));
-      saveStats({ RFX: parseInt(evt.target.value) });
+      playerGet.attributes.RFX = parseInt(evt.target.value, "");
     } else {
-      setRFX("");
-      saveStats({ RFX: "" });
+      playerGet.attributes.RFX = "";
     }
-  };
-
-  const changeMOD = (evt) => {
-    if (evt.target.value != "") {
-      setMOD(parseInt(evt.target.value, ""));
-      saveStats({ MOD: parseInt(evt.target.value) });
-    } else {
-      setMOD("");
-      saveStats({ MOD: "" });
-    }
+    updatePlayer(playerGet);
   };
 
   const changeDiceCount = (evt) => {
@@ -674,8 +727,6 @@ function App() {
     return (
       <div
         style={{
-          backgroundImage: `url(${landingBG})`,
-          backgroundSize: "contain",
           height: 540,
           width: 400,
           overflow: "hidden",
@@ -700,6 +751,114 @@ function App() {
     );
   }
 
+  const playerItem = (data, index) => {
+    return (
+      <div key={index}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            marginBottom: 5,
+            marginTop: 5,
+          }}
+        >
+          <Text>Codename: </Text>
+          <span
+            className="outline"
+            style={{
+              display: "inline-block",
+              fontSize: 12,
+              color: "orange",
+              width: 150,
+              textAlign: "center",
+              padding: 4,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {data.details.codename}
+          </span>
+
+          <button
+            className="button"
+            style={{
+              width: 96,
+              padding: 5,
+              marginRight: 4,
+              marginLeft: "auto",
+            }}
+            onClick={() => {
+              setPlayer(data);
+              setTab("chat");
+            }}
+          >
+            Load
+          </button>
+          <button
+            className="button"
+            style={{
+              fontWeight: "bolder",
+              width: 25,
+              color: "darkred",
+            }}
+            onClick={() => {}}
+          >
+            ✖
+          </button>
+        </div>
+        <hr />
+      </div>
+    );
+  };
+
+  const addPlayer = async () => {
+    const playerGet = AGENT();
+    const metadataData = await OBR.scene.getMetadata();
+    const metadata = metadataData["fist.character.extension/metadata"];
+    let metadataChange = { ...metadata };
+    metadataChange[playerGet.id] = playerGet;
+
+    OBR.scene.setMetadata({
+      "fist.character.extension/metadata": metadataChange,
+    });
+  };
+
+  const renderPlayerList = () => {
+    return (
+      <div>
+        <div
+          className="scrollable-container"
+          style={{
+            backgroundColor: "#333",
+            padding: 10,
+            overflow: "scroll",
+            height: 540,
+            border: "1px solid #222",
+          }}
+        >
+          <div className="outline" style={{ fontSize: 14, color: "lightgrey" }}>
+            FIST - Freelance Infantry Strike Team
+          </div>
+          <hr></hr>
+          {playerList.map((item, index) => {
+            return playerItem(item, index);
+          })}
+          <button
+            className="button"
+            style={{ fontWeight: "bolder", width: 80, float: "right" }}
+            onClick={() => {
+              addPlayer();
+            }}
+          >
+            Add Character
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   const renderInfo = () => {
     return (
       <div
@@ -717,13 +876,16 @@ function App() {
         </span>
         <input
           className="input-stat"
-          type="number"
           style={{
             width: 140,
             color: "lightred",
           }}
-          value={MOD}
-          onChange={changeMOD}
+          value={player.details.codename}
+          onChange={(evt) => {
+            const playerGet = { ...player };
+            playerGet.details.codename = evt.target.value;
+            updatePlayer(playerGet);
+          }}
         />
         <button
           className="button-dice"
@@ -731,9 +893,12 @@ function App() {
             width: 130,
             marginRight: 4,
           }}
-          onClick={() => {}}
+          onClick={() => {
+            if (tab === "chat") setTab("details");
+            else setTab("chat");
+          }}
         >
-          Role / Traits /Inventory
+          {tab === "chat" ? "Role / Traits /Inventory" : "Chat"}
         </button>
         <button
           className="button-dice"
@@ -742,7 +907,10 @@ function App() {
             color: "red",
             marginRight: 0,
           }}
-          onClick={() => {}}
+          onClick={() => {
+            setPlayer(null);
+            setTab("playerList");
+          }}
         >
           Close
         </button>
@@ -768,7 +936,7 @@ function App() {
             width: 20,
             color: "orange",
           }}
-          value={FRC}
+          value={player.attributes.FRC}
           onChange={changeFRC}
         />
         <button className="button-dice" onClick={() => {}}>
@@ -781,7 +949,7 @@ function App() {
             width: 20,
             color: "orange",
           }}
-          value={TAC}
+          value={player.attributes.TAC}
           onChange={changeTAC}
         />
         <button className="button-dice" onClick={() => {}}>
@@ -794,7 +962,7 @@ function App() {
             width: 20,
             color: "orange",
           }}
-          value={CRE}
+          value={player.attributes.CRE}
           onChange={changeCRE}
         />
         <button className="button-dice" onClick={() => {}}>
@@ -808,26 +976,16 @@ function App() {
             width: 20,
             color: "orange",
           }}
-          value={RFX}
+          value={player.attributes.RFX}
           onChange={changeRFX}
         />
-        <button className="button-dice" onClick={() => {}}>
+        <button
+          className="button-dice"
+          style={{ marginRight: 0 }}
+          onClick={() => {}}
+        >
           Reflexive
         </button>
-        <span className="dice-result" style={{ marginRight: 4 }}>
-          Mod:
-        </span>
-        <input
-          className="input-stat"
-          type="number"
-          style={{
-            width: 20,
-            color: "yellow",
-            marginRight: 0,
-          }}
-          value={MOD}
-          onChange={changeMOD}
-        />
       </div>
     );
   };
@@ -857,30 +1015,14 @@ function App() {
           value={diceCount}
           onChange={changeDiceCount}
         />
-        <span
-          className="dice-result"
-          style={{ marginRight: 4, whiteSpace: "nowrap" }}
-        >
-          + Damage:
-        </span>
-        <input
-          className="input-stat"
-          type="number"
-          style={{
-            width: 20,
-            color: "red",
-          }}
-          value={diceCount}
-          onChange={changeDiceCount}
-        />
         <button
           className="button-dice"
           style={{
-            width: 50,
+            width: 80,
           }}
           onClick={() => {}}
         >
-          Attack
+          Roll D6's
         </button>
 
         <span className="dice-result" style={{ marginRight: 4 }}>
@@ -891,10 +1033,34 @@ function App() {
           type="number"
           style={{
             width: 20,
-            color: "lightred",
+            color: "red",
           }}
-          value={MOD}
-          onChange={changeMOD}
+          value={player.stats.hp}
+          onChange={(evt) => {
+            const playerGet = { ...player };
+            playerGet.stats.hp = evt.target.value;
+            updatePlayer(playerGet);
+          }}
+        />
+        <span
+          className="dice-result"
+          style={{ marginRight: 4, whiteSpace: "nowrap" }}
+        >
+          Max HP:
+        </span>
+        <input
+          className="input-stat"
+          type="number"
+          style={{
+            width: 20,
+            color: "firebrick",
+          }}
+          value={player.stats.maxHP}
+          onChange={(evt) => {
+            const playerGet = { ...player };
+            playerGet.stats.maxHP = evt.target.value;
+            updatePlayer(playerGet);
+          }}
         />
         <span className="dice-result" style={{ marginRight: 4 }}>
           Armor:
@@ -906,8 +1072,12 @@ function App() {
             width: 20,
             color: "lightgrey",
           }}
-          value={MOD}
-          onChange={changeMOD}
+          value={player.stats.armor}
+          onChange={(evt) => {
+            const playerGet = { ...player };
+            playerGet.stats.armor = evt.target.value;
+            updatePlayer(playerGet);
+          }}
         />
         <span className="dice-result" style={{ marginRight: 4 }}>
           Wardice:
@@ -920,42 +1090,96 @@ function App() {
             color: "yellow",
             marginRight: 0,
           }}
-          value={MOD}
-          onChange={changeMOD}
+          value={player.stats.wardice}
+          onChange={(evt) => {
+            const playerGet = { ...player };
+            playerGet.stats.wardice = evt.target.value;
+            updatePlayer(playerGet);
+          }}
         />
       </div>
     );
   };
 
-  const trait = (data, index) => {
+  const item = (item, index) => {
+    return (
+      <div
+        key={index}
+        style={{ display: "flex", alignItems: "center", marginBottom: 4 }}
+      >
+        <input
+          className="input-stat"
+          style={{
+            width: 295,
+            color: "lightgrey",
+          }}
+          value={item}
+          placeholder="Item and description"
+          onChange={(evt) => {}}
+        />
+        <button
+          className="button"
+          style={{ width: 40, marginRight: 4 }}
+          onClick={() => {}}
+        >
+          Use
+        </button>
+        <button
+          className="button"
+          style={{ width: 40, marginRight: 4 }}
+          onClick={() => {}}
+        >
+          Show
+        </button>
+        <button
+          className="button"
+          style={{ width: 25, color: "darkred" }}
+          onClick={() => {}}
+        >
+          ✖
+        </button>
+      </div>
+    );
+  };
+
+  const trait = (trait, index) => {
     return (
       <div key={index}>
         <div style={{ display: "flex", alignItems: "center" }}>
-          <Text>Name: </Text>
-          <input
-            className="input-stat"
+          <div className="outline">({trait.Number})</div>
+          <div
+            className="outline"
             style={{
               width: 120,
-              color: "lightgrey",
+              textAlign: "center",
+              borderBottom: "1px solid #222",
+              fontSize: 12,
+              marginRight: 4,
+              color: "orange",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "inline-block",
+              paddingLeft: 4,
+              minHeight: 18,
             }}
-            value={data.name}
-            placeholder="Skill/Spell/Arcana/Etc."
-            onChange={(evt) => {}}
-          />
-          <Text>Info: </Text>
-          <input
-            className="input-stat"
+          >
+            {trait.Name}
+          </div>
+          <div
+            className="outline"
             style={{
-              width: 240,
-              color: "lightgrey",
+              color: "lightblue",
+              marginLeft: "auto",
+              marginRight: "auto",
+              fontSize: 11,
             }}
-            value={data.info}
-            placeholder="Level/Target/MP Cost/Duration/Damage/Other"
-            onChange={(evt) => {}}
-          />
+          >
+            ({trait.Stat})
+          </div>
           <button
             className="button"
-            style={{ marginRight: 4 }}
+            style={{ marginRight: 4, width: 40, marginLeft: "auto" }}
             onClick={() => {}}
           >
             Show
@@ -968,40 +1192,186 @@ function App() {
             ✖
           </button>
         </div>
-        <textarea
-          className="input-stat"
-          rows="40"
-          cols="88"
+
+        <div
+          className="outline"
           style={{
-            textAlign: "left",
-            color: "#FFF",
-            height: 50,
-            marginLeft: 0,
+            fontSize: 11,
+            borderRadius: 4,
+            background: "#333",
+            padding: 10,
             marginTop: 4,
-            width: 485,
-            padding: 4,
+            marginBottom: 4,
+            color: "lightgrey",
           }}
-          placeholder="Add Description Here"
-          onChange={(evt) => {}}
-          value={data.detail}
-        ></textarea>
+        >
+          {trait.Effect}
+        </div>
       </div>
     );
   };
 
+  const playerRole = (playerRole, index) => {
+    return (
+      <div key={index}>
+        <hr />
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Text>Role: </Text>
+          <select
+            autocomplete="on"
+            style={{
+              backgroundColor: "#333",
+              color: "orange",
+              fontSize: 12,
+              padding: 1,
+              borderRadius: 3,
+              border: "1px solid #222",
+              marginRight: 4,
+            }}
+          >
+            {rolesList.map((item) => {
+              return (
+                <option value={item.Name} title={item.Text}>
+                  {item.Name}
+                </option>
+              );
+            })}
+          </select>
+          <button
+            className="button"
+            style={{ marginRight: 4, width: 40, marginLeft: "auto" }}
+            onClick={() => {}}
+          >
+            Show
+          </button>
+          <button
+            className="button"
+            style={{ width: 25, color: "darkred" }}
+            onClick={() => {}}
+          >
+            ✖
+          </button>
+        </div>
+
+        <div
+          className="outline"
+          style={{
+            fontSize: 11,
+            borderRadius: 4,
+            background: "#333",
+            padding: 10,
+            marginTop: 4,
+            marginBottom: 4,
+            color: "lightgrey",
+          }}
+        >
+          {playerRole.Text}
+        </div>
+      </div>
+    );
+  };
+
+  const getTraitByNumber = (number) => {
+    return traitsList.find((item) => item.Number === number);
+  };
+
+  const renderTraits = () => {
+    return (
+      <>
+        <div className="outline" style={{ marginBottom: "1em" }}>
+          Traits and Abilities:
+        </div>
+        <hr></hr>
+        {trait(getTraitByNumber(356))}
+        {trait(traitsList[80])}
+        {trait(traitsList[32])}
+        <div
+          style={{ marginBottom: "1em", display: "flex", alignItems: "center" }}
+        >
+          <select
+            autocomplete="on"
+            style={{
+              backgroundColor: "#333",
+              color: "orange",
+              fontSize: 12,
+              padding: 1,
+              borderRadius: 3,
+              border: "1px solid #222",
+              marginRight: 4,
+              marginLeft: "auto",
+            }}
+          >
+            {traitsList.map((item) => {
+              return (
+                <option value={item.Name} title={item.Effect}>
+                  {item.Name} ({item.Number})
+                </option>
+              );
+            })}
+          </select>
+          <button
+            className="button"
+            style={{
+              fontWeight: "bolder",
+              width: 70,
+              marginTop: 2,
+            }}
+            onClick={() => {}}
+          >
+            Add Trait
+          </button>
+          <hr />
+        </div>
+      </>
+    );
+  };
+
+  const renderItems = () => {
+    return (
+      <>
+        <div className="outline" style={{ marginBottom: "1em" }}>
+          Items and Equipment:
+        </div>
+        <hr />
+        {item(traitsList[0].Item)}
+        {item(traitsList[80].Item)}
+        {item(traitsList[32].Item)}
+        <div style={{ display: "flex" }}>
+          <button
+            className="button"
+            style={{
+              fontWeight: "bolder",
+              width: 70,
+              marginTop: 2,
+              marginLeft: "auto",
+            }}
+            onClick={() => {}}
+          >
+            Add Item
+          </button>
+        </div>
+      </>
+    );
+  };
+
   const renderDetails = () => {
-    <div
-      style={{
-        marginLeft: 15,
-        marginRight: 15,
-        marginTop: 10,
-        height: "100%",
-      }}
-    >
-      {trait({ name: "name", info: "info", detail: "detail" })}
-      {trait({ name: "name", info: "info", detail: "detail" })}
-      {trait({ name: "name", info: "info", detail: "detail" })}
-    </div>;
+    return (
+      <div
+        className="scrollable-container"
+        style={{
+          marginLeft: 15,
+          marginRight: 15,
+          marginTop: 10,
+          height: "100%",
+          overflow: "scroll",
+          height: 410,
+        }}
+      >
+        {renderTraits()}
+        {renderItems()}
+        {playerRole(rolesList[0])}
+      </div>
+    );
   };
 
   const renderChat = () => {
@@ -1015,7 +1385,6 @@ function App() {
         }}
       >
         <div
-          id="chatbox"
           className="scrollable-container"
           style={{
             backgroundColor: "#333",
@@ -1074,17 +1443,17 @@ function App() {
     <div
       style={{
         background: "#444",
-        backgroundSize: "contain",
         height: 540,
         width: 400,
         overflow: "hidden",
       }}
     >
-      {renderInfo()}
-      {renderStats()}
-      {renderDice()}
-      {/* {renderChat()} */}
-      {renderDetails()}
+      {tab === "playerList" && renderPlayerList()}
+      {tab !== "playerList" && renderInfo()}
+      {tab !== "playerList" && renderStats()}
+      {tab !== "playerList" && renderDice()}
+      {tab === "chat" && renderChat()}
+      {tab === "details" && renderDetails()}
     </div>
   );
 }

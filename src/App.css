@@ -47,8 +47,18 @@
   scrollbar-width: none;
 }
 
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #222;
+  margin: 5px 0;
+  padding: 0;
+}
+
 .outline {
   color: #ffd433;
+  margin-right: 4px;
   font-size: 12px;
   text-shadow: #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px,
     #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;
@@ -64,8 +74,17 @@
   -webkit-font-smoothing: antialiased;
 }
 
-.button-dice {
+.button {
   width: 50px;
+  height: 25px;
+  font-size: 10px;
+  padding: 0;
+  color: #ffd433;
+  background-color: #222;
+}
+
+.button-dice {
+  width: 65px;
   height: 25px;
   font-size: 10px;
   padding: 0;
