@@ -1805,7 +1805,6 @@ function App() {
           marginLeft: 15,
           marginRight: 15,
           marginTop: 15,
-          minHeight: 90,
         }}
       >
         <div>
