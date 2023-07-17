@@ -2,12 +2,12 @@
   {
     "Title": "OWNER",
     "Values": [
-      "Soldier (`/matrix character soldier`)",
-      "Scientist (`/matrix character scientist`)",
-      "Celebrity (`/matrix character celebrity`)",
-      "Politican (`/matrix character politician`)",
-      "Civilian (`/matrix character civilian`)",
-      "Spy (`/matrix character spy`)"
+      "Soldier (`character soldier`)",
+      "Scientist (`character scientist`)",
+      "Celebrity (`character celebrity`)",
+      "Politican (`character politician`)",
+      "Civilian (`character civilian`)",
+      "Spy (`character spy`)"
     ]
   },
   {
@@ -106,18 +106,18 @@
   {
     "Title": "HISTORY",
     "Values": [
-      "Absorbed into corporate holdings (`/matrix faction corporation`)",
+      "Absorbed into corporate holdings (`faction corporation`)",
       "Built with a hidden weakness",
-      "Championed by a politician (`/matrix character politician`)",
+      "Championed by a politician (`character politician`)",
       "Constructed through community effort",
       "Damaged from a past gunfight",
       "Designed by a bad architect",
       "Ebb and flow of insect infestation",
       "Erected to evade taxes",
       "Ex-tourist attraction",
-      "Founded by a retired soldier (`/matrix character soldier`)",
-      "Frequented by a celebrity (`/matrix character celebrity`)",
-      "Funded by an intelligence agency (`/matrix faction agency`)",
+      "Founded by a retired soldier (`character soldier`)",
+      "Frequented by a celebrity (`character celebrity`)",
+      "Funded by an intelligence agency (`faction agency`)",
       "Handed down for generations",
       "Has always been avoided at night",
       "Hiding place for a body",
@@ -135,7 +135,7 @@
       "Secret nuclear disposal site",
       "Shuffled between management firms",
       "Site of a well-known murder",
-      "Someone added several new rooms (`/matrix location room`)",
+      "Someone added several new rooms (`location room`)",
       "Twice cordoned off as a biohazard",
       "Used to have an expansion",
       "Used to supply illegal substances",

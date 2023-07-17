@@ -13,7 +13,7 @@
       "Can of soda",
       "Car keys",
       "Cassette player",
-      "Cassette tape (`/matrix cassette`)",
+      "Cassette tape (`cassette`)",
       "Chewing gum",
       "Cigarettes",
       "Cigars",
@@ -43,14 +43,14 @@
   {
     "Title": "CRATE CONTENTS",
     "Values": [
-      "Artifacts (1D6 pieces, roll on Artifacts, `/matrix lore artifact`)",
+      "Artifacts (1D6 pieces, roll on Artifacts, `lore artifact`)",
       "Chemicals (1D6 types, e.g. tear gas, cleaner, etc.)",
-      "Armor (1D6 pieces, roll on Armor, `/matrix gear armor`)",
+      "Armor (1D6 pieces, roll on Armor, `gear armor`)",
       "Uniforms (Standard, or 1-in-1D6: High-ranking)",
       "Rations (2D6 MREs, +1D6 HP)",
       "Ammunition (1D6 types, e.g. bullets, rockets, etc.)",
       "Medical supplies (1D6 medkits, +1D6+TAC HP)",
-      "Weapons (1D6 weapons, roll on Weapons, `/matrix gear weapon`)",
+      "Weapons (1D6 weapons, roll on Weapons, `gear weapon`)",
       "Machine parts (2D6 usable parts)",
       "Explosives (2D6 small or 1D6 large)",
       "Documents (classified, answer 1D6 questions)"

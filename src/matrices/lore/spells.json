@@ -65,16 +65,16 @@
   {
     "Title": "FEATURE",
     "Values": [
-      "Alien eggs (`/matrix faction aliens`)",
-      "Animal bones (`/matrix enemy animal`)",
+      "Alien eggs (`faction aliens`)",
+      "Animal bones (`enemy animal`)",
       "Atonal chanting",
       "Blood goblets",
-      "Bound monster (`/matrix enemy monster`)",
+      "Bound monster (`enemy monster`)",
       "Candle circles",
       "Cleansing smoke",
       "Computer program",
       "Corpse juice",
-      "Cursed cassette (`/matrix cassette`)",
+      "Cursed cassette (`cassette`)",
       "Dark mulled wine",
       "Divination tool",
       "Drains caster",
@@ -89,7 +89,7 @@
       "Human sacrifice",
       "Kills the user",
       "Living sigils",
-      "Magical syllables (`/matrix syllables`)",
+      "Magical syllables (`syllables`)",
       "Many charms",
       "Microtonal music",
       "Powerful gem",
@@ -98,7 +98,7 @@
       "Spell jars",
       "Standing stones",
       "Stars must align",
-      "Summon anomaly (`/matrix enemy anomaly`)",
+      "Summon anomaly (`enemy anomaly`)",
       "Tattooing ritual",
       "Tea ceremony"
     ]
@@ -107,7 +107,7 @@
     "Title": "EFFECT",
     "Values": [
       "Activates a buried magitech super-mecha",
-      "An elder god is awoken to end the world (`/matrix syllables`)",
+      "An elder god is awoken to end the world (`syllables`)",
       "Attracts followers to your cause",
       "Births a new being without a soul",
       "Catalyst for developing telekinesis",

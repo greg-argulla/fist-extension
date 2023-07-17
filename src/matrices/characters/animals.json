@@ -100,7 +100,7 @@
       "Constant, over-loud noises",
       "Continuous unsustainable growth",
       "Corrosive inner fluids",
-      "Crossed with monsters (`/matrix enemy monster`)",
+      "Crossed with monsters (`enemy monster`)",
       "Deteriorating cybernetic implants",
       "Directional sense lost",
       "Haphazardly genetically engineered",
@@ -111,12 +111,12 @@
       "Innards full of foreign goo",
       "Irritated by tracking devices",
       "Large groups drop dead periodically",
-      "Losing young to alien abductions (`/matrix faction aliens`)",
+      "Losing young to alien abductions (`faction aliens`)",
       "No group cohesion",
       "Only eats human refuse",
       "Only emotion is fear",
       "Riddled with oozing lesions",
-      "Robots displacing them (`/matrix enemy robot`)",
+      "Robots displacing them (`enemy robot`)",
       "Severely dehydrated",
       "Sharp teeth in strange places",
       "Slick with crude oil, flammable",
@@ -129,7 +129,7 @@
       "Under mechanical mind control",
       "Unnatural dye coloration",
       "Unusually malleable",
-      "Weakened by invasive species (`/matrix enemy animal` again)",
+      "Weakened by invasive species (`enemy animal` again)",
       "Whole chunks just missing"
     ]
   }

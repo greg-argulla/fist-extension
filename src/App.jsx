@@ -7,6 +7,23 @@ import "./App.css";
 import traitsList from "./traits.json";
 import rolesList from "./roles.json";
 
+//missions
+import mission_generator from "./matrices/mission_generator.json";
+import mission_prompts from "./matrices/mission_prompts.json";
+//characters
+import animals from "./matrices/characters/animals.json";
+import anomalies from "./matrices/characters/anomalies.json";
+import celebrities from "./matrices/characters/celebrities.json";
+import civilians from "./matrices/characters/civilians.json";
+import experiments from "./matrices/characters/experiments.json";
+import monsters from "./matrices/characters/monsters.json";
+import politicians from "./matrices/characters/politicians.json";
+import robots from "./matrices/characters/robots.json";
+import scientists from "./matrices/characters/scientists.json";
+import soldiers from "./matrices/characters/soldiers.json";
+import spies from "./matrices/characters/spies.json";
+import squads from "./matrices/characters/squads.json";
+
 const Text = (props) => {
   const { children } = props;
   return <span className="outline">{children}</span>;
@@ -48,6 +65,7 @@ const standardIssueItems = [
 
 function App() {
   const [diceCount, setDiceCount] = useState(1);
+  const [diceChance, setDiceChance] = useState(1);
   const [text, setText] = useState("");
   const [isOBRReady, setIsOBRReady] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -61,8 +79,19 @@ function App() {
   const [cookiesNotEnabled, setCookiesNotEnabled] = useState(false);
   const [player, setPlayer] = useState(null);
   const [timeoutID, setTimeoutID] = useState(null);
-  const [tab, setTab] = useState("chat");
-  const [playerList, setPlayerList] = useState("chat");
+  const [tab, setTab] = useState("playerList");
+  const [playerList, setPlayerList] = useState([]);
+  const [gmScreen, setGMScreen] = useState(false);
+  const [selectedGenerator, setSelectedGenerator] = useState("");
+  const [generatorResult, setGeneratorResult] = useState("");
+  const [matrixName, setMatrixName] = useState("");
+
+  useEffect(() => {
+    var objDiv = document.getElementById("chatbox");
+    if (objDiv) {
+      objDiv.scrollTop = objDiv.scrollHeight;
+    }
+  }, [tab]);
 
   const createPlayerList = async (metadata) => {
     const metadataGet = metadata["fist.character.extension/metadata"];
@@ -156,75 +185,128 @@ function App() {
     return result;
   }
 
-  const rollInstance = (item, index) => {
+  const rollInstance = (item) => {
+    if (item.generated) {
+      return (
+        <div
+          className="roll-detail"
+          style={{ textAlign: "center", backgroundColor: "#222" }}
+        >
+          <div style={{ fontSize: 13, color: "darkorange" }}>
+            {item.matrixName}
+          </div>
+          {item.generated.map((detail, index) => (
+            <div key={index}>
+              <span style={{ color: "cyan", marginLeft: 3 }}>
+                {detail.title}
+              </span>
+              :
+              <span style={{ color: "lightgreen", marginLeft: 3 }}>
+                {detail.detail}
+              </span>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    if (item.chance) {
+      return (
+        <div className="roll-detail" style={{ textAlign: "center" }}>
+          <span>
+            {item.codename} rolled a
+            <span style={{ color: "cyan" }}>{" " + item.result + " "}</span>on a
+            <span style={{ color: "magenta" }}>{" " + item.chance + " "}</span>
+            of 6 chance.
+            {parseInt(item.result) <= parseInt(item.chance) && (
+              <span style={{ color: "lightgreen", marginLeft: 3 }}>
+                It happens!
+              </span>
+            )}
+            {parseInt(item.result) > parseInt(item.chance) && (
+              <span style={{ color: "red", marginLeft: 3 }}>
+                It didn't happen.
+              </span>
+            )}
+          </span>
+        </div>
+      );
+    }
+
     let total = item.results.reduce((total, num) => {
       return total + num;
     });
     if (item.bonus) total += item.bonus;
     return (
-      <div className="roll-detail" style={{ textAlign: "center" }} key={index}>
-        {item.codename} rolled{item.stat ? " " + item.stat : ""}:
-        {item.results.map((item, index) => {
-          if (index === 0) {
-            return <span style={{ color: "#438D80" }}>{" " + item}</span>;
-          }
-          return (
+      <div className="roll-detail" style={{ textAlign: "center" }}>
+        <span>
+          {item.codename} rolled{item.stat ? " " + item.stat : ""}:
+          {item.results.map((item, index) => {
+            if (index === 0) {
+              return (
+                <span style={{ color: "#438D80" }} key={index}>
+                  {" " + item}
+                </span>
+              );
+            }
+            return (
+              <span style={{ marginLeft: 3 }} key={index}>
+                + <span style={{ color: "#438D80" }}>{item}</span>
+              </span>
+            );
+          })}
+          {item.bonus ? (
             <span style={{ marginLeft: 3 }}>
-              + <span style={{ color: "#438D80" }}>{item}</span>
-            </span>
-          );
-        })}
-        {item.bonus ? (
-          <span style={{ marginLeft: 3 }}>
-            +{" "}
-            <span style={{ color: item.bonus > 0 ? "lightgreen" : "red" }}>
-              {item.bonus}
-            </span>
-          </span>
-        ) : (
-          ""
-        )}
-        {item.results.length > 1 && (
-          <span style={{ marginLeft: 3 }}>
-            = <span style={{ color: "lightblue" }}>{total}</span>
-          </span>
-        )}
-        {item.stat ? (
-          <span>
-            {item.results[0] === 6 && item.results[1] === 6 ? (
-              <span
-                style={{ color: "#FF4500", marginLeft: 3 }}
-                className={index > chat.length - 8 ? "crit" : ""}
-              >
-                ULTRA SUCCESS
+              +{" "}
+              <span style={{ color: item.bonus > 0 ? "lightgreen" : "red" }}>
+                {item.bonus}
               </span>
-            ) : total > 9 ? (
-              <span style={{ color: "lightgreen", marginLeft: 3 }}>
-                SUCCESS
-              </span>
-            ) : total > 6 ? (
-              <span style={{ color: "orange", marginLeft: 3 }}>
-                PARTIAL SUCCESS
-              </span>
-            ) : (
-              <span style={{ color: "brown", marginLeft: 3 }}>FAILURE</span>
-            )}
-          </span>
-        ) : (
-          ""
-        )}
-        {item.results.length === 3 && (
-          <span style={{ marginLeft: 3 }}>
-            Best Two:{" "}
-            <span style={{ color: "lightgreen", marginRight: 3 }}>
-              {Math.max(...item.results) + nextBiggest(item.results)}
             </span>
-            Worst Two:{" "}
-            <span style={{ color: "red" }}>
-              {Math.min(...item.results) + nextBiggest(item.results)}
+          ) : (
+            ""
+          )}
+          {item.results.length > 1 && (
+            <span style={{ marginLeft: 3 }}>
+              = <span style={{ color: "lightblue" }}>{total}</span>
             </span>
-          </span>
-        )}
+          )}
+          {item.stat ? (
+            <span>
+              {item.results[0] === 6 && item.results[1] === 6 ? (
+                <span
+                  style={{ color: "#FF4500", marginLeft: 3 }}
+                  className={index > chat.length - 8 ? "crit" : ""}
+                >
+                  ULTRA SUCCESS
+                </span>
+              ) : total > 9 ? (
+                <span style={{ color: "lightgreen", marginLeft: 3 }}>
+                  SUCCESS
+                </span>
+              ) : total > 6 ? (
+                <span style={{ color: "orange", marginLeft: 3 }}>
+                  PARTIAL SUCCESS
+                </span>
+              ) : (
+                <span style={{ color: "brown", marginLeft: 3 }}>FAILURE</span>
+              )}
+            </span>
+          ) : (
+            ""
+          )}
+          {item.results.length === 3 && (
+            <span style={{ marginLeft: 3 }}>
+              Best Two:{" "}
+              <span style={{ color: "lightgreen", marginRight: 3 }}>
+                {Math.max(...item.results) + nextBiggest(item.results)}
+              </span>
+              Worst Two:{" "}
+              <span style={{ color: "red" }}>
+                {Math.min(...item.results) + nextBiggest(item.results)}
+              </span>
+            </span>
+          )}
+        </span>
       </div>
     );
   };
@@ -647,10 +729,73 @@ function App() {
     const newMessage = {
       id: Date.now(),
       user: name,
-      codename: player.details.codename,
+      codename: player ? player.details.codename : "GM",
       results,
       bonus,
       stat,
+    };
+    const newChat = [...myChat, newMessage];
+
+    const metadataGet = await OBR.scene.getMetadata();
+    const metadata = metadataGet["fist.extension/metadata"];
+    let metadataChange = { ...metadata };
+    metadataChange[id] = newChat;
+
+    OBR.scene.setMetadata({
+      "fist.extension/metadata": metadataChange,
+    });
+    setTab("chat");
+    setUnreadCount(0);
+
+    setTimeout(() => {
+      var objDiv = document.getElementById("chatbox");
+      if (objDiv) {
+        objDiv.scrollTop = objDiv.scrollHeight;
+      }
+    }, 100);
+  };
+
+  const addChanceRoll = async (chance) => {
+    const newMessage = {
+      id: Date.now(),
+      user: name,
+      codename: player ? player.details.codename : "GM",
+      result: generateRandomNumber(6),
+      chance,
+    };
+    const newChat = [...myChat, newMessage];
+
+    const metadataGet = await OBR.scene.getMetadata();
+    const metadata = metadataGet["fist.extension/metadata"];
+    let metadataChange = { ...metadata };
+    metadataChange[id] = newChat;
+
+    OBR.scene.setMetadata({
+      "fist.extension/metadata": metadataChange,
+    });
+    setTab("chat");
+    setUnreadCount(0);
+
+    setTimeout(() => {
+      var objDiv = document.getElementById("chatbox");
+      if (objDiv) {
+        objDiv.scrollTop = objDiv.scrollHeight;
+      }
+    }, 100);
+  };
+
+  const addGeneratedResult = async (item) => {
+    const generated = generatorResult.map((item) => {
+      return { title: item.Title, detail: item.Values[item.index] };
+    });
+
+    const newMessage = {
+      id: Date.now(),
+      user: name,
+      matrixName,
+      generated: item
+        ? [{ title: item.Title, detail: item.Values[item.index] }]
+        : generated,
     };
     const newChat = [...myChat, newMessage];
 
@@ -722,6 +867,15 @@ function App() {
       setDiceCount(parseInt(evt.target.value, ""));
     } else {
       setDiceCount("");
+    }
+  };
+
+  const changeDiceChance = (evt) => {
+    if (evt.target.value != "") {
+      const value = parseInt(evt.target.value, "");
+      setDiceChance(value < 7 ? value : 6);
+    } else {
+      setDiceChance("");
     }
   };
 
@@ -888,6 +1042,22 @@ function App() {
           }}
         >
           Add Character
+        </button>
+        <button
+          className="button"
+          style={{
+            fontWeight: "bolder",
+            width: 100,
+            float: "right",
+            marginRight: 4,
+          }}
+          onClick={() => {
+            setGMScreen(true);
+            setTab("chat");
+            setUnreadCount(0);
+          }}
+        >
+          Open GM Section
         </button>
       </div>
     );
@@ -1574,8 +1744,399 @@ function App() {
     );
   };
 
+  const getRandomIndexFromArray = (array) => {
+    const index = Math.floor(Math.random() * array.length);
+    return index;
+  };
+
   const renderGenerators = () => {
-    return "";
+    return (
+      <div
+        style={{
+          marginLeft: 15,
+          marginRight: 15,
+          marginTop: 15,
+        }}
+      >
+        <div>
+          <span
+            className="dice-result"
+            style={{ marginRight: 4, marginTop: 4 }}
+          >
+            D6's
+          </span>
+          <input
+            className="input-stat"
+            type="number"
+            style={{
+              width: 20,
+              color: "cyan",
+            }}
+            value={diceCount}
+            onChange={changeDiceCount}
+          />
+          <button
+            className="button-dice"
+            style={{
+              width: 60,
+            }}
+            onClick={() => {
+              addRoll(diceCount);
+            }}
+          >
+            Roll D6's
+          </button>
+          <span
+            className="dice-result"
+            style={{ marginRight: 4, marginTop: 4 }}
+          >
+            Chance:
+          </span>
+          <input
+            className="input-stat"
+            type="number"
+            style={{
+              width: 20,
+              color: "cyan",
+            }}
+            value={diceChance}
+            onChange={changeDiceChance}
+          />
+          <button
+            className="button-dice"
+            style={{
+              width: 60,
+            }}
+            onClick={() => {
+              addChanceRoll(diceChance);
+            }}
+          >
+            {diceChance} out of 6
+          </button>
+          <button
+            className="button-dice"
+            style={{
+              width: 35,
+              color: "red",
+              marginRight: 0,
+              float: "right",
+            }}
+            onClick={() => {
+              setPlayer(null);
+              setTab("playerList");
+              setGMScreen(false);
+            }}
+          >
+            Close
+          </button>
+
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              marginTop: 4,
+            }}
+          >
+            {selectedGenerator === "" && (
+              <>
+                <button
+                  className="button-generator"
+                  onClick={() => {
+                    setSelectedGenerator("characters");
+                  }}
+                >
+                  Characters
+                </button>
+                <button className="button-generator">Cyclops</button>
+                <button className="button-generator">Factions</button>
+                <button className="button-generator">Gear</button>
+                <button className="button-generator">Locations</button>
+                <button className="button-generator">World</button>
+                <button className="button-generator">Cassettes</button>
+                <button className="button-generator">Misc</button>
+                <button
+                  className="button-generator"
+                  onClick={() => {
+                    setSelectedGenerator("missions");
+                  }}
+                >
+                  Mission
+                </button>
+                <button className="button-generator">Traits/Role</button>
+              </>
+            )}
+            {/* characters */}
+            {selectedGenerator === "characters" && (
+              <>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(animals));
+                    setTab("details");
+                    setMatrixName("Animals");
+                  }}
+                >
+                  Animals
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(anomalies));
+                    setTab("details");
+                    setMatrixName("Anomalies");
+                  }}
+                >
+                  Anomalies
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(celebrities));
+                    setTab("details");
+                    setMatrixName("Celebrities");
+                  }}
+                >
+                  Celebrities
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(civilians));
+                    setTab("details");
+                    setMatrixName("Civilians");
+                  }}
+                >
+                  Civilians
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(experiments));
+                    setTab("details");
+                    setMatrixName("Experiments");
+                  }}
+                >
+                  Experiments
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(monsters));
+                    setTab("details");
+                    setMatrixName("Monsters");
+                  }}
+                >
+                  Monsters
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(politicians));
+                    setTab("details");
+                    setMatrixName("Politicians");
+                  }}
+                >
+                  Politicians
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(robots));
+                    setTab("details");
+                    setMatrixName("Robots");
+                  }}
+                >
+                  Robots
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(scientists));
+                    setTab("details");
+                    setMatrixName("Scientists");
+                  }}
+                >
+                  Scientists
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(soldiers));
+                    setTab("details");
+                    setMatrixName("Soldiers");
+                  }}
+                >
+                  Soldiers
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(spies));
+                    setTab("details");
+                    setMatrixName("Spies");
+                  }}
+                >
+                  Spies
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(squads));
+                    setTab("details");
+                    setMatrixName("Squads");
+                  }}
+                >
+                  Squads
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ color: "orange" }}
+                  onClick={() => {
+                    setSelectedGenerator("");
+                    setTab("chat");
+                    setUnreadCount(0);
+                    setMatrixName("");
+                  }}
+                >
+                  Reset
+                </button>
+              </>
+            )}
+
+            {/* Missions */}
+            {selectedGenerator === "missions" && (
+              <>
+                <button
+                  className="button-generator"
+                  style={{ width: 100 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(mission_prompts));
+                    setMatrixName("Mission Prompts");
+                    setTab("details");
+                  }}
+                >
+                  Mission Prompts
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 100 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(mission_generator));
+                    setMatrixName("Mission Generator");
+                    setTab("details");
+                  }}
+                >
+                  Mission Generator
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ color: "orange" }}
+                  onClick={() => {
+                    setSelectedGenerator("");
+                    setTab("chat");
+                    setUnreadCount(0);
+                  }}
+                >
+                  Reset
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const generator = (table) => {
+    return table.map((item, index) => {
+      item.index = getRandomIndexFromArray(item.Values);
+      return item;
+    });
+  };
+
+  const renderGenerator = (generator) => {
+    return generator.map((item, index) => {
+      return (
+        <>
+          <div
+            key={index}
+            className="outline"
+            style={{ display: "flex", alignItems: "center" }}
+          >
+            <div>
+              <button
+                className="button-dice"
+                style={{
+                  backgroundImage: `url(${refresh})`,
+                  backgroundSize: "contain",
+                  width: 28,
+                  height: 20,
+                  margin: 5,
+                }}
+                onClick={() => {
+                  const newGenerator = [...generator];
+                  newGenerator[index].index = getRandomIndexFromArray(
+                    item.Values
+                  );
+                  setGeneratorResult(newGenerator);
+                }}
+              />
+            </div>
+            <div>
+              {item.Title}: {item.Values[item.index]}
+            </div>
+            <div style={{ marginLeft: "auto" }}>
+              <button
+                className="button-generator"
+                style={{ color: "orange", width: 40 }}
+                onClick={() => {
+                  addGeneratedResult(item);
+                }}
+              >
+                Show
+              </button>
+            </div>
+          </div>
+          <hr></hr>
+        </>
+      );
+    });
+  };
+
+  const renderGeneratorResult = () => {
+    return (
+      <div
+        style={{
+          marginLeft: 15,
+          marginRight: 15,
+          marginTop: 15,
+        }}
+      >
+        <hr></hr>
+        {renderGenerator(generatorResult)}
+        <button
+          className="button-generator"
+          style={{ color: "orange", float: "right" }}
+          onClick={() => {
+            addGeneratedResult();
+          }}
+        >
+          Show All
+        </button>
+      </div>
+    );
   };
 
   return (
@@ -1587,13 +2148,14 @@ function App() {
         overflow: "hidden",
       }}
     >
-      {/* {tab === "playerList" && renderPlayerList()}
-      {tab !== "playerList" && renderInfo()}
-      {tab !== "playerList" && renderDice()}
-      {tab !== "playerList" && renderStats()} */}
-      {renderGenerators()}
+      {!gmScreen && tab === "playerList" && renderPlayerList()}
+      {!gmScreen && tab !== "playerList" && renderInfo()}
+      {!gmScreen && tab !== "playerList" && renderDice()}
+      {!gmScreen && tab !== "playerList" && renderStats()}
+      {gmScreen && renderGenerators()}
+      {gmScreen && tab === "details" && renderGeneratorResult()}
       {tab === "chat" && renderChat()}
-      {tab === "details" && renderDetails()}
+      {!gmScreen && tab === "details" && renderDetails()}
     </div>
   );
 }

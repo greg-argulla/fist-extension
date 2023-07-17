@@ -13,10 +13,10 @@
   {
     "Title": "COMMAND",
     "Values": [
-      "Agency (`/matrix faction agency`)",
-      "Corporation (`/matrix faction corporation`)",
-      "Criminals (`/matrix faction criminals`)",
-      "Insurgents (`/matrix faction insurgents`)",
+      "Agency (`faction agency`)",
+      "Corporation (`faction corporation`)",
+      "Criminals (`faction criminals`)",
+      "Insurgents (`faction insurgents`)",
       "CYCLOPS",
       "Mercenaries"
     ]

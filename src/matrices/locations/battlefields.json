@@ -56,7 +56,7 @@
     "Values": [
       "Air raids",
       "Ammo shack",
-      "Armor lockers (`/matrix gear armor`)",
+      "Armor lockers (`gear armor`)",
       "Barbed wire",
       "Bear traps",
       "Bombed out",
@@ -80,7 +80,7 @@
       "Radio towers",
       "Reality fractures",
       "Sack of money",
-      "Scared animals (`/matrix enemy animal`)",
+      "Scared animals (`enemy animal`)",
       "Several bunkers",
       "Snipers posted",
       "Strewn bones",
@@ -88,7 +88,7 @@
       "Tripwires",
       "Two flags",
       "Unused tanks",
-      "Weapon racks (`/matrix gear weapon`)",
+      "Weapon racks (`gear weapon`)",
       "Weird noises"
     ]
   },

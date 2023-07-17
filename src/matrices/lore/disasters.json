@@ -99,21 +99,21 @@
   {
     "Title": "IMPACT",
     "Values": [
-      "A corporation attempts to buy the area (`/matrix faction corporation`)",
-      "A cult claims to have prophesied it exactly (`/matrix faction cult`)",
-      "Aliens offer superior disaster control (`/matrix faction aliens`)",
-      "An anomalous artifact unearths itself (`/matrix lore artifact`)",
-      "An experiment escapes into the area (`/matrix enemy experiment`)",
+      "A corporation attempts to buy the area (`faction corporation`)",
+      "A cult claims to have prophesied it exactly (`faction cult`)",
+      "Aliens offer superior disaster control (`faction aliens`)",
+      "An anomalous artifact unearths itself (`lore artifact`)",
+      "An experiment escapes into the area (`enemy experiment`)",
       "Area becomes closed to the public",
       "Area becomes flooded by ghosts of victims",
       "Area has to be bombed by the government",
       "CYCLOPS reverse engineers the disaster",
       "CYCLOPS seizes the recon opportunity",
       "Catalytic event for the summoning of a demon",
-      "Celebrity writes an iconic protest song (`/matrix character celebrity`)",
-      "City wracked with widespread paranoia (`/matrix location city`)",
-      "Covert monster community outed (`/matrix enemy monster`)",
-      "Criminal org takes over relief effort (`/matrix faction criminals`)",
+      "Celebrity writes an iconic protest song (`character celebrity`)",
+      "City wracked with widespread paranoia (`location city`)",
+      "Covert monster community outed (`enemy monster`)",
+      "Criminal org takes over relief effort (`faction criminals`)",
       "Disaster presented as a divine punishment",
       "END IS NIGH sign-wearers have a great day",
       "Eugenicist ideas become popular",
@@ -121,8 +121,8 @@
       "Every man for himself mindset takes hold",
       "Final straw to start a brewing war",
       "Hollywood immediately begins a film adaptation",
-      "Important politician goes missing (`/matrix character politician`)",
-      "Local reality spirals and becomes a zone (`/matrix location zone`)",
+      "Important politician goes missing (`character politician`)",
+      "Local reality spirals and becomes a zone (`location zone`)",
       "Mandatory curfew imposed",
       "Mass panic causes a fatal crowd crush",
       "Mutual aid hub established",
@@ -133,8 +133,8 @@
       "Ruthless martial law imposed",
       "Strict security protocol adopted",
       "The event attracts disaster tourism",
-      "Triggers a second, worse disaster (`/matrix lore disaster` again)",
-      "Used as mission cover by a spy (`/matrix character spy`)"
+      "Triggers a second, worse disaster (`lore disaster` again)",
+      "Used as mission cover by a spy (`character spy`)"
     ]
   }
 ]
