@@ -1390,7 +1390,7 @@ function App() {
         <input
           className="input-stat"
           style={{
-            width: 295,
+            width: 340,
             color: "lightgrey",
           }}
           value={item}
@@ -1402,13 +1402,6 @@ function App() {
           }}
           readOnly={traitItem}
         />
-        <button
-          className="button"
-          style={{ width: 40, marginRight: 4 }}
-          onClick={() => {}}
-        >
-          Use
-        </button>
         <button
           className="button"
           style={{ width: 40, marginRight: 4 }}
