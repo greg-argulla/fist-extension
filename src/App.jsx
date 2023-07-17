@@ -1939,6 +1939,14 @@ function App() {
                 <button
                   className="button-generator"
                   onClick={() => {
+                    setSelectedGenerator("lore");
+                  }}
+                >
+                  Lore
+                </button>
+                <button
+                  className="button-generator"
+                  onClick={() => {
                     setSelectedGenerator("actions");
                   }}
                 >
