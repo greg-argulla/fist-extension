@@ -1,6 +1,6 @@
 ---
-title: Last Fable
-description: Dice and chat extension for fabula ultima
+title: Fist Extension
+description: Dice, Character, Random Generator, and Chat for FIST Ultra Edition
 author: Alyx
 image: https://fabula-ultima-extension.onrender.com/last-fable-image.jpg
 icon: https://fabula-ultima-extension.onrender.com/last-fable-icon.png

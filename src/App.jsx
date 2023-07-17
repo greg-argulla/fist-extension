@@ -997,7 +997,26 @@ function App() {
           >
             {data.details.codename}
           </span>
-
+          <Text>HP:</Text>
+          <input
+            className="input-stat"
+            style={{
+              width: 20,
+              color: "Red",
+            }}
+            readOnly={true}
+            value={data.stats.hp}
+          />
+          <Text>Armor: </Text>
+          <input
+            className="input-stat"
+            style={{
+              width: 20,
+              color: "lightgrey",
+            }}
+            readOnly={true}
+            value={data.stats.armor}
+          />
           <button
             className="button"
             style={{
@@ -1828,7 +1847,7 @@ function App() {
             type="number"
             style={{
               width: 20,
-              color: "cyan",
+              color: "magenta",
             }}
             value={diceChance}
             onChange={changeDiceChance}
