@@ -2321,7 +2321,7 @@ function App() {
                     setTab("details");
                   }}
                 >
-                  <Diplomacy></Diplomacy>
+                  Diplomacy
                 </button>
                 <button
                   className="button-generator"
