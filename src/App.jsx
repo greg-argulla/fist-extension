@@ -1007,15 +1007,15 @@ function App() {
             readOnly={true}
             value={data.stats.hp}
           />
-          <Text>Armor: </Text>
+          <Text>Wardice: </Text>
           <input
             className="input-stat"
             style={{
               width: 20,
-              color: "lightgrey",
+              color: "yellow",
             }}
             readOnly={true}
-            value={data.stats.armor}
+            value={data.stats.wardice}
           />
           <button
             className="button"
