@@ -219,5 +219,36 @@
       "Woodstock is a distraction",
       "World-eater entity's herald arrives"
     ]
+  },
+  {
+    "Title": "RANDOM ENCOUNTERS",
+    "Values": [
+      "Single/group of 1D6 aliens",
+      "Single/group of 1D6 monsters/experiments",
+      "Faction representative",
+      "Single/group of animals",
+      "A random pre-made NPC",
+      "1D6 soldiers and/or a squad",
+      "1D6 random NPCs",
+      "New location becomes available",
+      "Weather change",
+      "Single/group of 1D6 robots"
+    ]
+  },
+  {
+    "Title": "RANDOM DOWNTIME EVENTS",
+    "Values": [
+      "Massive CYCLOPS raid, all missions put on stanby",
+      "A world-ending threat needs immediate attention",
+      "FIST's location is discoverd by 1D6 CROs",
+      "A thief steals something important from FIST",
+      "An NPC appears to offer a mission",
+      "A faction takes action and/or offers a mission",
+      "An enemy appears and plans to attack FIST",
+      "Someone drops off a valuable item for free",
+      "1D6 missions are offered, all in the immediate area",
+      "An NPC appears to join FIST as an ally",
+      "CYCLOPS top secret base coordinates revealed"
+    ]
   }
 ]

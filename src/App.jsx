@@ -23,6 +23,45 @@ import scientists from "./matrices/characters/scientists.json";
 import soldiers from "./matrices/characters/soldiers.json";
 import spies from "./matrices/characters/spies.json";
 import squads from "./matrices/characters/squads.json";
+//Cyclops
+import gadgets from "./matrices/cyclops/gadgets.json";
+import rumors from "./matrices/cyclops/rumors.json";
+//Factions
+import agencies from "./matrices/factions/agencies.json";
+import aliens from "./matrices/factions/aliens.json";
+import corporations from "./matrices/factions/corporations.json";
+import criminals from "./matrices/factions/criminals.json";
+import cults from "./matrices/factions/cults.json";
+import insurgents from "./matrices/factions/insurgents.json";
+//Gears
+import base_upgrades from "./matrices/gear/base_upgrades.json";
+import gear_items from "./matrices/gear/items.json";
+import vehicles from "./matrices/gear/vehicles.json";
+import weapons_and_armor from "./matrices/gear/weapons_and_armor.json";
+import standard_issue from "./matrices/gear/standard_issue.json";
+//locations
+import battlefields from "./matrices/locations/battlefields.json";
+import cities from "./matrices/locations/cities.json";
+import nature from "./matrices/locations/nature.json";
+import rooms from "./matrices/locations/rooms.json";
+import structures from "./matrices/locations/structures.json";
+import zones from "./matrices/locations/zones.json";
+//lore
+import artifacts from "./matrices/lore/artifacts.json";
+import coverups from "./matrices/lore/coverups.json";
+import diplomacy from "./matrices/lore/diplomacy.json";
+import disasters from "./matrices/lore/disasters.json";
+import legends from "./matrices/lore/legends.json";
+import spells from "./matrices/lore/spells.json";
+//world
+import hazards from "./matrices/world/hazards.json";
+//cassettes
+import cassettes from "./matrices/cassettes.json";
+//misc
+import misc from "./matrices/misc.json";
+import combat from "./matrices/combat.json";
+import partials from "./matrices/partials.json";
+import choke_scores from "./matrices/choke_scores.json";
 
 const Text = (props) => {
   const { children } = props;
@@ -53,15 +92,6 @@ const AGENT = () => {
     dead: false,
   };
 };
-
-const standardIssueItems = [
-  "Balaclava (hides identity)",
-  "Flashlight (can be used as a weapon attachment)",
-  "Knife (1D6 DAMAGE)",
-  "MRE field rations (+1D6 HP, one use)",
-  "Pistol (1D6 DAMAGE)",
-  "Riot shield (1 ARMOR, equip as weapon)",
-];
 
 function App() {
   const [diceCount, setDiceCount] = useState(1);
@@ -185,7 +215,7 @@ function App() {
     return result;
   }
 
-  const rollInstance = (item) => {
+  const rollInstance = (item, index) => {
     if (item.generated) {
       return (
         <div
@@ -331,7 +361,7 @@ function App() {
           <div className="outline">
             <div onClick={() => setToPM(item.user)}>{item.user}</div>
           </div>
-          <div className="skill-detail">
+          <div className="roll-detail">
             <div style={{ fontSize: 13, color: "darkorange" }}>
               {item.title}
             </div>
@@ -1756,6 +1786,7 @@ function App() {
           marginLeft: 15,
           marginRight: 15,
           marginTop: 15,
+          minHeight: 90,
         }}
       >
         <div>
@@ -1813,12 +1844,27 @@ function App() {
           >
             {diceChance} out of 6
           </button>
+          {selectedGenerator !== "" && (
+            <button
+              className="button-generator"
+              style={{ color: "orange" }}
+              onClick={() => {
+                setSelectedGenerator("");
+                setTab("chat");
+                setUnreadCount(0);
+                setMatrixName("");
+              }}
+            >
+              Reset
+            </button>
+          )}
           <button
             className="button-dice"
             style={{
               width: 35,
               color: "red",
               marginRight: 0,
+              marginLeft: "auto",
               float: "right",
             }}
             onClick={() => {
@@ -1847,13 +1893,57 @@ function App() {
                 >
                   Characters
                 </button>
-                <button className="button-generator">Cyclops</button>
-                <button className="button-generator">Factions</button>
-                <button className="button-generator">Gear</button>
-                <button className="button-generator">Locations</button>
-                <button className="button-generator">World</button>
-                <button className="button-generator">Cassettes</button>
-                <button className="button-generator">Misc</button>
+                <button
+                  className="button-generator"
+                  onClick={() => {
+                    setSelectedGenerator("cyclops");
+                  }}
+                >
+                  Cyclops
+                </button>
+                <button
+                  className="button-generator"
+                  onClick={() => {
+                    setSelectedGenerator("factions");
+                  }}
+                >
+                  Factions
+                </button>
+                <button
+                  className="button-generator"
+                  onClick={() => {
+                    setSelectedGenerator("gear");
+                  }}
+                >
+                  Gear
+                </button>
+                <button
+                  className="button-generator"
+                  onClick={() => {
+                    setSelectedGenerator("locations");
+                  }}
+                >
+                  Locations
+                </button>
+                <button
+                  className="button-generator"
+                  onClick={() => {
+                    setSelectedGenerator("actions");
+                  }}
+                >
+                  Actions
+                </button>
+                <button
+                  className="button-generator"
+                  onClick={() => {
+                    setSelectedGenerator("misc");
+                    setGeneratorResult(generator(misc));
+                    setMatrixName("Misc");
+                    setTab("details");
+                  }}
+                >
+                  Misc
+                </button>
                 <button
                   className="button-generator"
                   onClick={() => {
@@ -1862,7 +1952,14 @@ function App() {
                 >
                   Mission
                 </button>
-                <button className="button-generator">Traits/Role</button>
+                <button
+                  className="button-generator"
+                  onClick={() => {
+                    setSelectedGenerator("traits/roles");
+                  }}
+                >
+                  Traits/Roles
+                </button>
               </>
             )}
             {/* characters */}
@@ -1878,17 +1975,6 @@ function App() {
                   }}
                 >
                   Animals
-                </button>
-                <button
-                  className="button-generator"
-                  style={{ width: 70 }}
-                  onClick={() => {
-                    setGeneratorResult(generator(anomalies));
-                    setTab("details");
-                    setMatrixName("Anomalies");
-                  }}
-                >
-                  Anomalies
                 </button>
                 <button
                   className="button-generator"
@@ -1989,6 +2075,115 @@ function App() {
                 >
                   Spies
                 </button>
+              </>
+            )}
+            {/* Cyclops */}
+            {selectedGenerator === "cyclops" && (
+              <>
+                <button
+                  className="button-generator"
+                  style={{ width: 100 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(gadgets));
+                    setMatrixName("Cyclops Gadgets");
+                    setTab("details");
+                  }}
+                >
+                  Cyclops Gadgets
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 100 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(rumors));
+                    setMatrixName("Cyclops Rumors");
+                    setTab("details");
+                  }}
+                >
+                  Cyclops Rumors
+                </button>
+              </>
+            )}
+            {/* Factions */}
+            {selectedGenerator === "factions" && (
+              <>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(agencies));
+                    setMatrixName("Agencies");
+                    setTab("details");
+                  }}
+                >
+                  Agencies
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(aliens));
+                    setMatrixName("Aliens");
+                    setTab("details");
+                  }}
+                >
+                  Aliens
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(anomalies));
+                    setTab("details");
+                    setMatrixName("Anomalies");
+                  }}
+                >
+                  Anomalies
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(corporations));
+                    setMatrixName("Corporations");
+                    setTab("details");
+                  }}
+                >
+                  Corporation
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(criminals));
+                    setMatrixName("Criminals");
+                    setTab("details");
+                  }}
+                >
+                  Criminals
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(cults));
+                    setMatrixName("Cults");
+                    setTab("details");
+                  }}
+                >
+                  Cults
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(insurgents));
+                    setMatrixName("Insurgents");
+                    setTab("details");
+                  }}
+                >
+                  Insurgents
+                </button>
                 <button
                   className="button-generator"
                   style={{ width: 70 }}
@@ -2000,21 +2195,232 @@ function App() {
                 >
                   Squads
                 </button>
+              </>
+            )}
+            {/* Gear */}
+            {selectedGenerator === "gear" && (
+              <>
                 <button
                   className="button-generator"
-                  style={{ color: "orange" }}
+                  style={{ width: 100 }}
                   onClick={() => {
-                    setSelectedGenerator("");
-                    setTab("chat");
-                    setUnreadCount(0);
-                    setMatrixName("");
+                    setGeneratorResult(generator(base_upgrades));
+                    setMatrixName("Base Upgrades");
+                    setTab("details");
                   }}
                 >
-                  Reset
+                  Base Upgrades
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 100 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(gear_items));
+                    setMatrixName("Gear Items");
+                    setTab("details");
+                  }}
+                >
+                  Gear Items
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 100 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(vehicles));
+                    setMatrixName("Vehicles");
+                    setTab("details");
+                  }}
+                >
+                  Vehicles
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 100 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(weapons_and_armor));
+                    setMatrixName("Weapon and Armor");
+                    setTab("details");
+                  }}
+                >
+                  Weapon and Armor
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 100 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(cassettes));
+                    setMatrixName("Cassettes");
+                    setTab("details");
+                  }}
+                >
+                  Cassettes
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 100 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(standard_issue));
+                    setMatrixName("Standard Issue Items");
+                    setTab("details");
+                  }}
+                >
+                  Standard Issue
                 </button>
               </>
             )}
-
+            {/* Lore */}
+            {selectedGenerator === "lore" && (
+              <>
+                <button
+                  className="button-generator"
+                  style={{ width: 100 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(artifacts));
+                    setMatrixName("Artifacts");
+                    setTab("details");
+                  }}
+                >
+                  Artifacts
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 100 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(coverups));
+                    setMatrixName("Cover-ups");
+                    setTab("details");
+                  }}
+                >
+                  Cover-ups
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 100 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(diplomacy));
+                    setMatrixName("Diplomacy");
+                    setTab("details");
+                  }}
+                >
+                  <Diplomacy></Diplomacy>
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 100 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(disasters));
+                    setMatrixName("Disasters");
+                    setTab("details");
+                  }}
+                >
+                  Disasters
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 100 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(legends));
+                    setMatrixName("Legends");
+                    setTab("details");
+                  }}
+                >
+                  Legends
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 100 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(spells));
+                    setMatrixName("Zones");
+                    setTab("details");
+                  }}
+                >
+                  Spells
+                </button>
+              </>
+            )}
+            {/* Locations */}
+            {selectedGenerator === "locations" && (
+              <>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(battlefields));
+                    setMatrixName("Battlefields");
+                    setTab("details");
+                  }}
+                >
+                  Battlefields
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(cities));
+                    setMatrixName("Cities");
+                    setTab("details");
+                  }}
+                >
+                  Cities
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(nature));
+                    setMatrixName("Nature");
+                    setTab("details");
+                  }}
+                >
+                  Nature
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(rooms));
+                    setMatrixName("Rooms");
+                    setTab("details");
+                  }}
+                >
+                  Rooms
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(structures));
+                    setMatrixName("Structures");
+                    setTab("details");
+                  }}
+                >
+                  Structures
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(zones));
+                    setMatrixName("Zones");
+                    setTab("details");
+                  }}
+                >
+                  Zones
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(hazards));
+                    setMatrixName("Hazards");
+                    setTab("details");
+                  }}
+                >
+                  Hazards
+                </button>
+              </>
+            )}
             {/* Missions */}
             {selectedGenerator === "missions" && (
               <>
@@ -2040,16 +2446,78 @@ function App() {
                 >
                   Mission Generator
                 </button>
+              </>
+            )}
+            {selectedGenerator === "actions" && (
+              <>
                 <button
                   className="button-generator"
-                  style={{ color: "orange" }}
+                  style={{ width: 100 }}
                   onClick={() => {
-                    setSelectedGenerator("");
-                    setTab("chat");
-                    setUnreadCount(0);
+                    setGeneratorResult(generator(partials));
+                    setMatrixName("Partial Success");
+                    setTab("details");
                   }}
                 >
-                  Reset
+                  Partial Success
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 100 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(combat));
+                    setMatrixName("Combat Actions");
+                    setTab("details");
+                  }}
+                >
+                  Combat Actions
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 100 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(choke_scores));
+                    setMatrixName("Choke Scores");
+                    setTab("details");
+                  }}
+                >
+                  Choke Scores
+                </button>
+              </>
+            )}
+            {selectedGenerator === "traits/roles" && (
+              <>
+                <button
+                  className="button-generator"
+                  style={{ width: 100 }}
+                  onClick={() => {
+                    const traits = traitsList.map((item) => {
+                      return `(${item.Number}) ${item.Name} - ${item.Effect} ITEM: ${item.Item} (${item.Stat}) `;
+                    });
+                    setGeneratorResult(
+                      generator([{ Title: "Trait", Values: [...traits] }])
+                    );
+                    setMatrixName("Traits");
+                    setTab("details");
+                  }}
+                >
+                  Traits
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 100 }}
+                  onClick={() => {
+                    const roles = rolesList.map((item) => {
+                      return `(${item.Number}) ${item.Name} - ${item.Text}`;
+                    });
+                    setGeneratorResult(
+                      generator([{ Title: "Role", Values: [...roles] }])
+                    );
+                    setMatrixName("Roles");
+                    setTab("details");
+                  }}
+                >
+                  Roles
                 </button>
               </>
             )}

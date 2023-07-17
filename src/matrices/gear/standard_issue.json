@@ -1,0 +1,26 @@
+[
+  {
+    "Title": "Balaclava",
+    "Values": ["(hides identity)"]
+  },
+  {
+    "Title": "Flashlight",
+    "Values": ["(can be used as a weapon attachment)"]
+  },
+  {
+    "Title": "Knife",
+    "Values": ["(1D6 DAMAGE)"]
+  },
+  {
+    "Title": "MRE field rations",
+    "Values": ["(+1D6 HP, one use)"]
+  },
+  {
+    "Title": "Pistol",
+    "Values": ["(1D6 DAMAGE)"]
+  },
+  {
+    "Title": "Riot shield",
+    "Values": ["(1 ARMOR, equip as weapon)"]
+  }
+]

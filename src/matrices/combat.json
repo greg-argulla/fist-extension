@@ -1,0 +1,34 @@
+[
+  {
+    "Title": "COMBAT BEHAVIORS",
+    "Values": [
+      "Big push forward",
+      "Call reinforcements",
+      "Thrown weapon",
+      "Find new position",
+      "Wide attack",
+      "Use cover",
+      "Focus attack",
+      "Fortify position",
+      "Move to flank",
+      "Area attack",
+      "Use special ability, or fall back if none"
+    ]
+  },
+  {
+    "Title": "HIT LOCATIONS",
+    "Values": [
+      "Head/weak spot",
+      "Left leg/foot",
+      "Left hand",
+      "Left arm",
+      "Shoulder(s)",
+      "Chest",
+      "Gut",
+      "Right arm",
+      "Right hand",
+      "Right leg/foot",
+      "Compound injury (roll two hit locations)"
+    ]
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "Title": "COMBAT PARTIAL SUCCESS",
+    "Values": [
+      "The enemy doubles down",
+      "The enemy flanks you",
+      "You deal half DAMAGE",
+      "You hurt a teammate too",
+      "You trade DAMAGE",
+      "Your weapon stops working"
+    ]
+  },
+  {
+    "Title": "GENERAL PARTIAL SUCCESS",
+    "Values": [
+      "You can't move right now",
+      "You cannot finish it alone",
+      "You deplete a resource",
+      "You ignore something else",
+      "You need more time",
+      "You'll need to rest a moment"
+    ]
+  },
+  {
+    "Title": "MENTAL PARTIAL SUCCESS",
+    "Values": [
+      "Approximate calculations only",
+      "More research is required",
+      "Some information is lost",
+      "You can't remember exactly",
+      "You don't know why you're right",
+      "You failed to account for..."
+    ]
+  },
+  {
+    "Title": "MOVEMENT PARTIAL SUCCESS",
+    "Values": [
+      "You drop an important item",
+      "You go partially off-course",
+      "You hurt yourself a little",
+      "You must take a longer route",
+      "You're now in harm's way",
+      "You're stopped halfway"
+    ]
+  },
+  {
+    "Title": "SOCIAL PARTIAL SUCCESS",
+    "Values": [
+      "Disarm yourself immediately",
+      "That won't work again",
+      "You must prove yourself",
+      "You must provide compensation",
+      "You need to make a hard sell",
+      "You'll be watched constantly"
+    ]
+  },
+  {
+    "Title": "WEIRD PARTIAL SUCCESS",
+    "Values": [
+      "A trait behaves erratically",
+      "Turn on your teammates",
+      "You begin losing your grip",
+      "You get a bad nosebleed",
+      "You slowly develop a new trait",
+      "You're struck by lightning"
+    ]
+  }
+]
