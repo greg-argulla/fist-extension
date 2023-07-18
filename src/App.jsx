@@ -551,17 +551,20 @@ function App() {
   const createChatArray = async (metadata) => {
     const metadataGet = metadata["fist.extension/metadata"];
     let messages = [];
-    const keys = Object.keys(metadataGet);
 
     const playerId = await OBR.player.getId();
     setId(playerId);
 
-    keys.forEach((key) => {
-      messages = messages.concat(metadataGet[key]);
-      if (key === playerId) {
-        setMyChat(metadataGet[key]);
-      }
-    });
+    if (metadataGet) {
+      const keys = Object.keys(metadataGet);
+
+      keys.forEach((key) => {
+        messages = messages.concat(metadataGet[key]);
+        if (key === playerId) {
+          setMyChat(metadataGet[key]);
+        }
+      });
+    }
 
     return messages.sort((a, b) => a.id - b.id);
   };
