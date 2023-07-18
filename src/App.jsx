@@ -2152,17 +2152,6 @@ function App() {
                   className="button-generator"
                   style={{ width: 70 }}
                   onClick={() => {
-                    setGeneratorResult(generator(anomalies));
-                    setTab("details");
-                    setMatrixName("Anomalies");
-                  }}
-                >
-                  Anomalies
-                </button>
-                <button
-                  className="button-generator"
-                  style={{ width: 70 }}
-                  onClick={() => {
                     setGeneratorResult(generator(corporations));
                     setMatrixName("Corporations");
                     setTab("details");
@@ -2292,7 +2281,18 @@ function App() {
               <>
                 <button
                   className="button-generator"
-                  style={{ width: 100 }}
+                  style={{ width: 70 }}
+                  onClick={() => {
+                    setGeneratorResult(generator(anomalies));
+                    setTab("details");
+                    setMatrixName("Anomalies");
+                  }}
+                >
+                  Anomalies
+                </button>
+                <button
+                  className="button-generator"
+                  style={{ width: 70 }}
                   onClick={() => {
                     setGeneratorResult(generator(artifacts));
                     setMatrixName("Artifacts");
@@ -2303,7 +2303,7 @@ function App() {
                 </button>
                 <button
                   className="button-generator"
-                  style={{ width: 100 }}
+                  style={{ width: 70 }}
                   onClick={() => {
                     setGeneratorResult(generator(coverups));
                     setMatrixName("Cover-ups");
@@ -2314,7 +2314,7 @@ function App() {
                 </button>
                 <button
                   className="button-generator"
-                  style={{ width: 100 }}
+                  style={{ width: 70 }}
                   onClick={() => {
                     setGeneratorResult(generator(diplomacy));
                     setMatrixName("Diplomacy");
@@ -2325,7 +2325,7 @@ function App() {
                 </button>
                 <button
                   className="button-generator"
-                  style={{ width: 100 }}
+                  style={{ width: 70 }}
                   onClick={() => {
                     setGeneratorResult(generator(disasters));
                     setMatrixName("Disasters");
@@ -2336,7 +2336,7 @@ function App() {
                 </button>
                 <button
                   className="button-generator"
-                  style={{ width: 100 }}
+                  style={{ width: 70 }}
                   onClick={() => {
                     setGeneratorResult(generator(legends));
                     setMatrixName("Legends");
@@ -2347,7 +2347,7 @@ function App() {
                 </button>
                 <button
                   className="button-generator"
-                  style={{ width: 100 }}
+                  style={{ width: 70 }}
                   onClick={() => {
                     setGeneratorResult(generator(spells));
                     setMatrixName("Zones");
