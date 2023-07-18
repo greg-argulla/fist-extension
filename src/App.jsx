@@ -263,9 +263,12 @@ function App() {
       );
     }
 
-    let total = item.results.reduce((total, num) => {
-      return total + num;
-    });
+    let total = 0;
+    if (item.results.length) {
+      total = item.results.reduce((total, num) => {
+        return total + num;
+      });
+    }
     if (item.bonus) total += item.bonus;
     return (
       <div className="roll-detail" style={{ textAlign: "center" }}>
