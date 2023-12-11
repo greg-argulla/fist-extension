@@ -1748,9 +1748,11 @@ function App() {
           }}
         >
           {chat.length
-            ? chat.map((item, index) => (
-                <ChatInstance key={index} item={item} index={index} />
-              ))
+            ? chat
+                .sort((a, b) => b.id - a.id)
+                .map((item, index) => (
+                  <ChatInstance key={index} item={item} index={index} />
+                ))
             : ""}
         </div>
         <div style={{ marginTop: 5, display: "flex", alignItems: "center" }}>
