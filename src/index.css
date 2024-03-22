@@ -33,7 +33,7 @@ body {
   overflow-x: scroll;
   height: 540px;
   width: 400px;
-  scrollbar-width: none;
+  scrollbar-width: 0px;
 }
 
 body::-webkit-scrollbar {
