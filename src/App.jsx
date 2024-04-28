@@ -274,7 +274,7 @@ function App() {
       <div className="roll-detail" style={{ textAlign: "center" }}>
         <span>
           {item.codename} rolled{item.stat ? " " + item.stat : ""}:
-          {item.results.map((item, index) => {
+          {item.results?.map((item, index) => {
             if (index === 0) {
               return (
                 <span style={{ color: "#438D80" }} key={index}>
