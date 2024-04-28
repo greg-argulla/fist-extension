@@ -269,6 +269,10 @@ function App() {
         return total + num;
       });
     }
+    if (!item.results) {
+      return "";
+    }
+
     if (item.bonus) total += item.bonus;
     return (
       <div className="roll-detail" style={{ textAlign: "center" }}>
