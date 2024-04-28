@@ -264,7 +264,7 @@ function App() {
     }
 
     let total = 0;
-    if (item.results.length) {
+    if (item.results && item.results.length) {
       total = item.results.reduce((total, num) => {
         return total + num;
       });
